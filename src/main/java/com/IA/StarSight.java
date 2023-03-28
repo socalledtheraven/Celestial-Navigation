@@ -11,7 +11,7 @@ public class StarSight {
     }
 
     private double angularHeightToObservedHeight(double angularHeight) {
-        // perform adjustments, treat ah as Ho for now
+        // use altitude correction tables in almanac
         return angularHeight;
     }
 }

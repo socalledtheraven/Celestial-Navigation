@@ -7,7 +7,7 @@ public class User {
     private Time UTC;
 
     public User(StarSight[] stars, Time UTC) {
-        this.stars = stars.GP.;
+        this.stars = stars;
         this.UTC = UTC;
     }
 

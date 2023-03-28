@@ -12,6 +12,12 @@ public class Utilities {
         return angles*60;
     }
 
+    public static double strAngleToDegrees(String strAngle) {
+        return Double.parseDouble(strAngle.substring(0, strAngle.indexOf(" ")));
+    }
+
+    public static int round
+
     public static void processAlmanac() {
         // use a try with resources
         try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {

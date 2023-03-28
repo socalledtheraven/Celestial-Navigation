@@ -15,20 +15,20 @@ public class GeographicPosition {
         this.GHA = GHAFromAlmanac(star);
     }
 
-    private String declinationFromAlmanac(String star) {
+    private double declinationFromAlmanac(String star) {
         LocalDate today = LocalDate.now();
         int dayOfYear = today.getDayOfYear();
         int page = 2*(dayOfYear+17);
         String[] parts = processAlmanac(page, star);
-        return parts[1];
+        return Utilities.strAngleToDegrees(parts[1]);
     }
 
-    private String GHAFromAlmanac(String star) {
+    private double GHAFromAlmanac(String star) {
         LocalDate today = LocalDate.now();
         int dayOfYear = today.getDayOfYear();
         int page = 2*(dayOfYear+17);
         String[] parts = processAlmanac(page, star);
-        return parts[0];
+        return Utilities.strAngleToDegrees(parts[0]);
     }
 
     public double getDeclination() {

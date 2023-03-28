@@ -5,15 +5,15 @@ import static java.lang.Math.sin;
 import static java.lang.Math.asin;
 
 public class AssumedPosition {
-    private double Alat;
-    private double Alon;
+    private int Alat;
+    private String[] Alon;
     private double Hc;
     private double azimuthAngle;
 
-    private AssumedPosition(double aLat, double aLon, GeographicPosition GP) {
-        this.Alat = aLat;
-        this.Alon = aLon;
-        double LHA = GP.getGHA() - Alon;
-        this.Hc = asin((sin(GP.getDeclination()) * sin(Alat)) + (cos(GP.getDeclination()) * cos(Alat) * cos(LHA)));
+    private AssumedPosition(double DRlat, double DRlon, GeographicPosition GP) {
+        Alat = (int) Math.round(DRlat);
+        Alon = ( + String.valueOf(GP.getGHA()));
+        double LHA = GP.getGHA() - DRlon;
+        this.Hc = asin((sin(GP.getDeclination()) * sin(DRlat)) + (cos(GP.getDeclination()) * cos(DRlat) * cos(LHA)));
     }
 }
