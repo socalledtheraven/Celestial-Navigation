@@ -15,14 +15,16 @@ public class StarSight {
     private double angularHeightToObservedHeight(double angularHeight, double indexCorrection, Boolean ICon,
                                                  double eyeHeight) {
         // use altitude correction tables in almanac
-        double dip = Utilities.round(sqrt(eyeHeight), 1);
-        if (ICon) {
-            return angularHeight - indexCorrection - dip;
-        }
-        return angularHeight + indexCorrection - dip;
+        return 35.141;
+        // REMOVE ONCE TESTING IS DONE!!!!!!!!!!!!!!!
+//        double dip = Utilities.round(sqrt(eyeHeight), 1);
+//        if (ICon) {
+//            return angularHeight - indexCorrection - dip;
+//        }
+//        return angularHeight + indexCorrection - dip;
     }
 
-    public double azimuth(double dec, AssumedPosition AP) {
+    public double calculateAzimuth(double dec, AssumedPosition AP) {
         double aLat = AP.getAlat();
         double Z = acos((sin(dec)-sin(aLat)*sin(AP.getHc())) / (cos(aLat)*cos(AP.getHc())));
         if (Z < 0) {

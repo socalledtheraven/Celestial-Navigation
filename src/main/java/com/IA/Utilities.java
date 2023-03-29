@@ -14,7 +14,15 @@ public class Utilities {
     }
 
     public static double strAngleToDegrees(String strAngle) {
-        return Double.parseDouble(strAngle.substring(0, strAngle.indexOf(" ")));
+        strAngle = strAngle.replace(".", "");
+        System.out.println("strAngle: " + strAngle);
+        if (strAngle.contains("◦")) {
+            System.out.println(strAngle.replace("◦", "."));
+            return Double.parseDouble(strAngle.replace("◦", "."));
+        } else {
+            System.out.println(strAngle.replace(" ", "."));
+            return Double.parseDouble(strAngle.replace(" ", "."));
+        }
     }
 
     public static double round(double value, int precision) {
@@ -41,17 +49,19 @@ public class Utilities {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     if (line.contains(star)) {
-                        parts = line.replace(star, "").split(" ");
+                        parts = line.replace(star, "").trim().split(" ");
                         break;
                     }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return parts;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return parts;
+        return null;
     }
 }

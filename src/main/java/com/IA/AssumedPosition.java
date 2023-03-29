@@ -12,13 +12,17 @@ public class AssumedPosition {
     public AssumedPosition(double DRlat, double DRlon, GeographicPosition GP) {
         Alat = (int) Math.round(DRlat);
         Alon = calcAlon(DRlon, GP.getGHA());
-        double LHA = GP.getGHA() - DRlon;
+        double LHA = calculateLHA(GP.getGHA());
+        System.out.println("LHA: " + LHA);
         this.Hc = asin((sin(GP.getDeclination()) * sin(DRlat)) + (cos(GP.getDeclination()) * cos(DRlat) * cos(LHA)));
+        System.out.println(Hc);
     }
 
     private double calcAlon(double DRlon, double GHA) {
+        System.out.println("DRlon: " + DRlon + " GHA: " + GHA);
         double GHAMins = Utilities.getMinutes(GHA);
         double angleMins = Utilities.getMinutes(DRlon);
+        System.out.println("angleMins: " + angleMins + " GHAMins: " + GHAMins);
         double distanceToY = Math.abs(angleMins - GHAMins);
         double distanceToYPlusOne = Math.abs(angleMins - (GHAMins + 1));
 
@@ -28,6 +32,17 @@ public class AssumedPosition {
         } else {
             return (Math.round(DRlon) + 1 + GHAMins);
         }
+    }
+
+    private double calculateLHA(double GHA) {
+        // also handle with east and west stuff once I implement lat/lon classes
+        double LHA = GHA - Alon;
+        if (LHA < 0) {
+            LHA += 360;
+        } else if (LHA > 360) {
+            LHA -= 360;
+        }
+        return LHA;
     }
 
     public int getAlat() {
