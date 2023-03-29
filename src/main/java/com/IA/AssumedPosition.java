@@ -6,14 +6,25 @@ import static java.lang.Math.asin;
 
 public class AssumedPosition {
     private int Alat;
-    private String[] Alon;
+    private double Alon;
     private double Hc;
-    private double azimuthAngle;
 
     private AssumedPosition(double DRlat, double DRlon, GeographicPosition GP) {
         Alat = (int) Math.round(DRlat);
-        Alon = ( + String.valueOf(GP.getGHA()));
+        Alon = Utilities.calcAlon(DRlon, GP.getGHA());
         double LHA = GP.getGHA() - DRlon;
         this.Hc = asin((sin(GP.getDeclination()) * sin(DRlat)) + (cos(GP.getDeclination()) * cos(DRlat) * cos(LHA)));
+    }
+
+    public int getAlat() {
+        return Alat;
+    }
+
+    public double getAlon() {
+        return Alon;
+    }
+
+    public double getHc() {
+        return Hc;
     }
 }

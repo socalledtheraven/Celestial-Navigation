@@ -12,7 +12,7 @@ public class User {
     }
 
     // VERY IMPORTANT NOTE: {lat, lon}, not {lon, lat}
-    public double[] truePosition(double zenithDistance, double declination, ) {
-
-    }
+//    public double[] truePosition(double zenithDistance, double declination, ) {
+//
+//    }
 }

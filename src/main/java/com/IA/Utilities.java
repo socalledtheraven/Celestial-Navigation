@@ -4,8 +4,6 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Utilities {
     public static double angleToNauticalMiles(double angles) {
@@ -16,7 +14,19 @@ public class Utilities {
         return Double.parseDouble(strAngle.substring(0, strAngle.indexOf(" ")));
     }
 
-    public static int round
+    public static double calcAlon(double DRlon, double GHA) {
+        double GHAMins = Double.parseDouble(String.valueOf(GHA).substring(0, String.valueOf(GHA).indexOf(".")));
+        double angleMins = DRlon - Math.round(DRlon);
+        double distanceToY = Math.abs(angleMins - GHAMins);
+        double distanceToYPlusOne = Math.abs(angleMins - (GHAMins + 1));
+
+        // make alon within 0.3 of DR-lon, ignoring whole differences.
+        if (distanceToY > distanceToYPlusOne) {
+            return (Math.round(DRlon) + GHAMins);
+        } else {
+            return (Math.round(DRlon) + 1 + GHAMins);
+        }
+    }
 
     public static void processAlmanac() {
         // use a try with resources
