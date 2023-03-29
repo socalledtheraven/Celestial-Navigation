@@ -26,4 +26,12 @@ public class StarSight {
        }
        return Z;
     }
+
+    public double getObservedHeight() {
+        return observedHeight;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

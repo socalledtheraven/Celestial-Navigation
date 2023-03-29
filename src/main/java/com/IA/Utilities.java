@@ -14,38 +14,6 @@ public class Utilities {
         return Double.parseDouble(strAngle.substring(0, strAngle.indexOf(" ")));
     }
 
-    public static double calcAlon(double DRlon, double GHA) {
-        double GHAMins = Double.parseDouble(String.valueOf(GHA).substring(0, String.valueOf(GHA).indexOf(".")));
-        double angleMins = DRlon - Math.round(DRlon);
-        double distanceToY = Math.abs(angleMins - GHAMins);
-        double distanceToYPlusOne = Math.abs(angleMins - (GHAMins + 1));
-
-        // make alon within 0.3 of DR-lon, ignoring whole differences.
-        if (distanceToY > distanceToYPlusOne) {
-            return (Math.round(DRlon) + GHAMins);
-        } else {
-            return (Math.round(DRlon) + 1 + GHAMins);
-        }
-    }
-
-    public static void processAlmanac() {
-        // use a try with resources
-        try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {
-            PDFTextStripper stripper = new PDFTextStripper();
-            for (int i = 18; i <= 258; i += 2) {
-                stripper.setStartPage(i); // Start extracting text from the current page
-                stripper.setEndPage(i); // Extract text only from the current page
-                String pageText = stripper.getText(document); // Extracts the text from the current page
-                // Process the extracted text from the current page as needed
-                String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
-                extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
-                System.out.println(extractedText);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static String[] processAlmanac(int page, String star) {
         try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {
             PDFTextStripper stripper = new PDFTextStripper();
@@ -56,21 +24,23 @@ public class Utilities {
             String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
             extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
 
-            String[] parts;
+            String[] parts = new String[0];
             try (Scanner scanner = new Scanner(extractedText)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     if (line.contains(star)) {
-                        line.replace(star, "");
-                        parts = line.split(" ");
+                        parts = line.replace(star, "").split(" ");
                         break;
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             return parts;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return new String[0];
     }
 }

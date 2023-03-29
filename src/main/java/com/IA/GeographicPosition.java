@@ -2,13 +2,9 @@ package com.IA;
 
 import java.time.LocalDate;
 
-import static com.IA.Utilities.processAlmanac;
-
 public class GeographicPosition {
     private double GHA;
     private double declination;
-    private double latitude;
-    private double longitude;
 
     public GeographicPosition(String star) {
         this.declination = declinationFromAlmanac(star);
@@ -19,7 +15,7 @@ public class GeographicPosition {
         LocalDate today = LocalDate.now();
         int dayOfYear = today.getDayOfYear();
         int page = 2*(dayOfYear+17);
-        String[] parts = processAlmanac(page, star);
+        String[] parts = Utilities.processAlmanac(page, star);
         return Utilities.strAngleToDegrees(parts[1]);
     }
 
@@ -27,7 +23,7 @@ public class GeographicPosition {
         LocalDate today = LocalDate.now();
         int dayOfYear = today.getDayOfYear();
         int page = 2*(dayOfYear+17);
-        String[] parts = processAlmanac(page, star);
+        String[] parts = Utilities.processAlmanac(page, star);
         return Utilities.strAngleToDegrees(parts[0]);
     }
 
