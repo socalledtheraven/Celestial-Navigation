@@ -1,22 +1,25 @@
 package com.IA;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.acos;
+import static java.lang.Math.*;
 
 public class StarSight {
     private double observedHeight;
     private GeographicPosition GP;
     private String name;
 
-    public StarSight(String name, double angularHeight) {
+    public StarSight(String name, double angularHeight, double indexCorrection, Boolean ICon, double eyeHeight) {
         GP = new GeographicPosition(name);
-        observedHeight = angularHeightToObservedHeight(angularHeight);
+        observedHeight = angularHeightToObservedHeight(angularHeight, indexCorrection, ICon, eyeHeight);
     }
 
-    private double angularHeightToObservedHeight(double angularHeight) {
+    private double angularHeightToObservedHeight(double angularHeight, double indexCorrection, Boolean ICon,
+                                                 double eyeHeight) {
         // use altitude correction tables in almanac
-        return angularHeight;
+        double dip = Utilities.round(sqrt(eyeHeight), 1);
+        if (ICon) {
+            return angularHeight - indexCorrection - dip;
+        }
+        return angularHeight + indexCorrection - dip;
     }
 
     public double azimuth(double dec, double aLat, AssumedPosition AP) {

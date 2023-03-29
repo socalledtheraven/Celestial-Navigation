@@ -6,12 +6,20 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Utilities {
+    private Utilities() {
+        throw new IllegalStateException("Utility class");
+    }
     public static double angleToNauticalMiles(double angles) {
         return angles*60;
     }
 
     public static double strAngleToDegrees(String strAngle) {
         return Double.parseDouble(strAngle.substring(0, strAngle.indexOf(" ")));
+    }
+
+    public static double round(double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 
     public static String[] processAlmanac(int page, String star) {
