@@ -3,8 +3,8 @@ package com.IA;
 import java.time.LocalDate;
 
 public class GeographicPosition {
-    private double GHA;
-    private double declination;
+    private final double GHA;
+    private final double declination;
 
     public GeographicPosition(String star) {
         this.declination = declinationFromAlmanac(star);

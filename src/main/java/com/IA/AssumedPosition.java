@@ -5,9 +5,9 @@ import static java.lang.Math.sin;
 import static java.lang.Math.asin;
 
 public class AssumedPosition {
-    private int Alat;
-    private double Alon;
-    private double Hc;
+    private final int Alat;
+    private final double Alon;
+    private final double Hc;
 
     public AssumedPosition(double DRlat, double DRlon, GeographicPosition GP) {
         Alat = (int) Math.round(DRlat);
@@ -17,8 +17,8 @@ public class AssumedPosition {
     }
 
     private double calcAlon(double DRlon, double GHA) {
-        double GHAMins = Double.parseDouble(String.valueOf(GHA).substring(0, String.valueOf(GHA).indexOf(".")));
-        double angleMins = DRlon - Math.round(DRlon);
+        double GHAMins = Utilities.getMinutes(GHA);
+        double angleMins = Utilities.getMinutes(DRlon);
         double distanceToY = Math.abs(angleMins - GHAMins);
         double distanceToYPlusOne = Math.abs(angleMins - (GHAMins + 1));
 

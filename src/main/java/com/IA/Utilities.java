@@ -22,7 +22,12 @@ public class Utilities {
         return (double) Math.round(value * scale) / scale;
     }
 
+    public static double getMinutes(double angle) {
+        return angle - Math.round(angle);
+    }
+
     public static String[] processAlmanac(int page, String star) {
+        String[] parts = new String[0];
         try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {
             PDFTextStripper stripper = new PDFTextStripper();
             stripper.setStartPage(page); // Start extracting text from the current page
@@ -32,7 +37,6 @@ public class Utilities {
             String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
             extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
 
-            String[] parts = new String[0];
             try (Scanner scanner = new Scanner(extractedText)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
@@ -45,10 +49,9 @@ public class Utilities {
                 e.printStackTrace();
             }
 
-            return parts;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new String[0];
+        return parts;
     }
 }
