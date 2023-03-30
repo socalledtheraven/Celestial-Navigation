@@ -26,11 +26,23 @@ public class StarSight {
 
     public double calculateAzimuth(double dec, AssumedPosition AP) {
         double aLat = AP.getAlat();
-        double Z = acos((sin(dec)-sin(aLat)*sin(AP.getHc())) / (cos(aLat)*cos(AP.getHc())));
+        double Z = acos((sin(dec) - sin(aLat) * sin(AP.getHc())) / (cos(aLat) * cos(AP.getHc())));
         if (Z < 0) {
             return Z+180;
         }
         return Z;
+    }
+    
+    private double cos(double deg) {
+        return Math.toDegrees(Math.cos(Math.toRadians(deg)));
+    }
+
+    private double sin(double deg) {
+        return Math.toDegrees(Math.sin(Math.toRadians(deg)));
+    }
+
+    private double acos(double deg) {
+        return Math.toDegrees(Math.acos(Math.toRadians(deg)));
     }
 
     public double getObservedHeight() {

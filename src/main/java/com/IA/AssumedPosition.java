@@ -1,8 +1,6 @@
 package com.IA;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.asin;
+import static java.lang.Math;
 
 public class AssumedPosition {
     private final int Alat;
@@ -43,6 +41,18 @@ public class AssumedPosition {
             LHA -= 360;
         }
         return LHA;
+    }
+
+    private double cos(double deg) {
+        return Math.toDegrees(Math.cos(Math.toRadians(deg)));
+    }
+
+    private double sin(double deg) {
+        return Math.toDegrees(Math.sin(Math.toRadians(deg)));
+    }
+
+    private double asin(double deg) {
+        return Math.toDegrees(Math.asin(Math.toRadians(deg)));
     }
 
     public int getAlat() {
