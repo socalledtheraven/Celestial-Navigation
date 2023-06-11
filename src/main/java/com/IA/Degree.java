@@ -19,4 +19,18 @@ public class Degree {
     public Degree(int degrees) {
         this.degrees = degrees;
     }
+
+    public Degree(String strDegrees) {
+        String[] parts = strDegrees.split("°");
+        this.degrees = Integer.parseInt(parts[0]);
+        String[] parts2 = parts[1].split("'");
+        this.minutes = Integer.parseInt(parts2[0]);
+        this.seconds = Integer.parseInt(parts2[1].replace("\"", ""));
+    }
+
+
+    @Override
+    public String toString() {
+        return degrees + "° " + minutes + "' " + seconds + "\"";
+    }
 }

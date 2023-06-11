@@ -2,5 +2,10 @@ package com.IA;
 
 public class StarSight {
     private Star star;
-    private  indexCorrection
+    private Degree angularHeight;
+    private Degree indexCorrection;
+    private boolean indexCorrectionOn;
+    private Direction hemisphere;
+
+
 }
