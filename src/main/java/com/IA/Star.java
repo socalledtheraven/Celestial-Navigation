@@ -7,9 +7,11 @@ public class Star {
 
     public Star(String name) {
         this.name = name;
+        declination = FileHandler.getDeclination(name);
+        siderealHourAngle = FileHandler.getSHA(name);
     }
 
     public Degree getGreenwichHourAngle() {
-        return siderealHourAngle + getAriesGHA();
+        return siderealHourAngle + FileHandler.getAriesGHA();
     }
 }

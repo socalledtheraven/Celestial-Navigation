@@ -7,5 +7,13 @@ public class StarSight {
     private boolean indexCorrectionOn;
     private Direction hemisphere;
 
+    public StarSight(String name, Degree angularHeight, Degree indexCorrection, boolean indexCorrectionOn, Direction hemisphere) {
+        star = new Star(name);
+        this.angularHeight = angularHeight;
+        this.indexCorrection = indexCorrection;
+        this.indexCorrectionOn = indexCorrectionOn;
+        this.hemisphere = hemisphere;
+    }
+
 
 }
