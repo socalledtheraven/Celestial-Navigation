@@ -28,9 +28,20 @@ public class Degree {
         this.seconds = Integer.parseInt(parts2[1].replace("\"", ""));
     }
 
-
     @Override
     public String toString() {
         return degrees + "° " + minutes + "' " + seconds + "\"";
+    }
+
+    public int getDegrees() {
+        return degrees;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public int getSeconds() {
+        return seconds;
     }
 }
