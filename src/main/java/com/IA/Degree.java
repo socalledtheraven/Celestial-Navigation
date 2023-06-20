@@ -44,4 +44,16 @@ public class Degree {
     public int getSeconds() {
         return seconds;
     }
+
+    public void setDegrees(int degrees) {
+        this.degrees = degrees;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
 }
