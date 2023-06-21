@@ -7,17 +7,27 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 public class FileHandler {
-    public static void savePlot(Plot p) {
-
+    public static void savePlot(Plot p, String path) {
+        ArrayList<String> lines = new ArrayList<>();
+        lines.add("a:" + p.getA().toString() + ",");
+        lines.add("az:" + p.getAzimuth() + ",");
+        lines.add("ap=alat:" + p.getAP().getAssumedLatitude().toString() + ",alon:" + p.getAP().getAssumedLongitude().toString() + ",");
+        for (String l : lines) {
+            appendToFile(l, path);
+        }
     }
 
     public static Plot loadPlot(String path) {
         ArrayList<String> lines = wholeFileRead(path);
-        String aVal = lines.get(0).split(":")[1].replace(",", "").strip();
-        AValue a = new AValue(val);
+        String a = lines.get(0).split(":")[1].replace(",", "").strip();
+        AValue aVal = new AValue(a);
         String az = lines.get(1).split(":")[1].replace(",", "").strip();
-        double azimuth = Double.parseDouble(val);
-        String aLon = lines.get(2).split("=")[1].split(",")
+        double azimuth = Double.parseDouble(az);
+        String lat = lines.get(2).split("=")[1].split(",")[0].split(":")[1];
+        Latitude aLat = new Latitude(lat);
+        String lon = lines.get(2).split("=")[1].split(",")[1].replace(",", "").split(":")[1];
+        Longitude aLon = new Longitude(lon);
+        return new Plot(aLat, aLon, aVal, azimuth);
     }
 
     private static ArrayList<String> wholeFileRead(String path) {

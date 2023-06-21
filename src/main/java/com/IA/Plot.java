@@ -5,7 +5,7 @@ public class Plot {
     private AValue a;
     private double azimuth;
 
-    public Plot(AssumedPosition AP, AValue a, double azimuth) {
+    public Plot(Latitude aLat, Longitude aLon, AValue a, double azimuth) {
         this.AP = AP;
         this.a = a;
         this.azimuth = azimuth;
