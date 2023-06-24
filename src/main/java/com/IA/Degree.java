@@ -21,9 +21,19 @@ public class Degree {
     }
 
     public Degree(String strDegrees) {
-        String[] parts = strDegrees.split("°");
+        String[] parts;
+        if (strDegrees.contains("°")) {
+            parts = strDegrees.split("°");
+        } else {
+            parts = strDegrees.split("◦");
+        }
         this.degrees = Integer.parseInt(parts[0]);
-        String[] parts2 = parts[1].split("'");
+        String[] parts2;
+        if (parts[1].contains("'")) {
+            parts2 = parts[1].split("'");
+        } else {
+            parts2 = parts[1].split("\\.");
+        }
         this.minutes = Integer.parseInt(parts2[0]);
         this.seconds = Integer.parseInt(parts2[1].replace("\"", ""));
     }
@@ -55,5 +65,9 @@ public class Degree {
 
     public void setSeconds(int seconds) {
         this.seconds = seconds;
+    }
+
+    public static Degree add(Degree d1, Degree d2) {
+        return new Degree(d1.getDegrees() + d2.getDegrees(), d1.getMinutes() + d2.getMinutes(), d1.getSeconds() + d2.getSeconds());
     }
 }

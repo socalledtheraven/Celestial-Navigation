@@ -1,12 +1,18 @@
 package com.IA;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class FileHandler {
+    private static LocalDateTime now = LocalDateTime.now();
+//    private static LocalDateTime now = LocalDateTime.of(2023, 6, 25, 2, 4);
     public static void savePlot(Plot p, String path) {
         ArrayList<String> lines = new ArrayList<>();
         lines.add("a:" + p.getA().toString() + ",");
@@ -58,16 +64,66 @@ public class FileHandler {
     }
 
     public static GeographicPosition getDeclination(String name) {
-        return null;
+        return new GeographicPosition(starDetails(name, almanacPageText(dateToPageNum()))[1]);
     }
 
     public static Degree getSHA(String name) {
+        return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0]);
+    }
+
+    private static String almanacPageText(int page) {
+        try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {
+            PDFTextStripper stripper = new PDFTextStripper();
+            stripper.setStartPage(page); // Start extracting text from the current page
+            stripper.setEndPage(page); // Extract text only from the current page
+            return stripper.getText(document);
+        } catch (Exception e) {
+            // note: do some proper error handling after testing this ie invalid page numbers due to invalid dates etc
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String[] starDetails(String star, String pageText) {
+        String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
+        extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
+        try (Scanner scanner = new Scanner(extractedText)) {
+            String[] parts = new String[2];
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.contains(star)) {
+                    parts = line.replace(star, "").trim().split(" ");
+                    break;
+                }
+            }
+            return parts;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     public static Degree getAriesGHA() {
-        return null;
+        String pageText = almanacPageText(dateToPageNum());
+        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
+        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
+        String[] lines = extractedText.split("\\n");
+
+        Degree[] hourlyDetails = new Degree[lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (i != 0) {
+                Degree GHA = new Degree(line.split(" ")[1]);
+                hourlyDetails[i] = GHA;
+                System.out.println(GHA);
+            }
+        }
+
+        return hourlyDetails[now.getHour()];
     }
 
-
+    public static int dateToPageNum() {
+        // -1 for off-by-one, /3 bc 3 per page, x2 to skip the second page on each set
+        return ((now.getDayOfYear()-1)/3)*2 + 16;
+    }
 }
