@@ -64,11 +64,15 @@ public class FileHandler {
     }
 
     public static GeographicPosition getDeclination(String name) {
-        return new GeographicPosition(starDetails(name, almanacPageText(dateToPageNum()))[1]);
+        return new GeographicPosition(starDetails(name, almanacPageText(dateToPageNum()))[0][1]);
     }
 
     public static Degree getSHA(String name) {
-        return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0]);
+        return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0][0]);
+    }
+
+    public static String[] getStars() {
+        return starDetails("", almanacPageText(dateToPageNum()))[1];
     }
 
     private static String almanacPageText(int page) {
@@ -84,19 +88,24 @@ public class FileHandler {
         return null;
     }
 
-    private static String[] starDetails(String star, String pageText) {
+    private static String[][] starDetails(String star, String pageText) {
         String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
         extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
         try (Scanner scanner = new Scanner(extractedText)) {
             String[] parts = new String[2];
+            String[] stars = new String[59];
+            int counter = 0;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                String starOccurrence = line.split(" ")[0].strip();
+                stars[counter] = starOccurrence;
+
                 if (line.contains(star)) {
-                    parts = line.replace(star, "").trim().split(" ");
-                    break;
+                    parts = line.replace(star, "").strip().split(" ");
                 }
+                counter++;
             }
-            return parts;
+            return new String[][]{parts, stars};
         } catch (Exception e) {
             e.printStackTrace();
         }
