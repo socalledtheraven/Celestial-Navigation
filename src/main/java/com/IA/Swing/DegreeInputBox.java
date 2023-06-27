@@ -6,8 +6,8 @@ import java.awt.Graphics;
 public class DegreeInputBox extends JTextField {
     private static final String DEGREE_SYMBOL = "\u00B0"; // Unicode character for the degree sign
 
-    public DegreeInputBox(int columns) {
-        super(columns);
+    public DegreeInputBox() {
+        super(0);
     }
 
     @Override
@@ -18,7 +18,7 @@ public class DegreeInputBox extends JTextField {
         String text = getText();
 
         // Calculate the x-coordinate where the degree sign should be rendered
-        int degreeX = getFontMetrics(getFont()).stringWidth(text) + 2; // Add some padding
+        int degreeX = getWidth() - 2; // Add some padding
 
         // Render the degree sign at the calculated position
         g.drawString(DEGREE_SYMBOL, degreeX, getHeight() - 2);
