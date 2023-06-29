@@ -1,5 +1,10 @@
 package com.IA;
 
+/**
+ * The GeographicPosition class represents the circle traced by the star on the Earth's surface as it turns.
+ *
+ *
+ */
 public class GeographicPosition extends Latitude {
     private Direction hemisphere;
 

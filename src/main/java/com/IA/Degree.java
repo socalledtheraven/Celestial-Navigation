@@ -38,6 +38,11 @@ public class Degree {
         this.seconds = Integer.parseInt(parts2[1].replace("\"", ""));
     }
 
+    public Degree(double doubDeg) {
+        this.minutes = (int) (doubDeg % 1);
+        this.degrees = (int) (doubDeg - minutes);
+    }
+
     @Override
     public String toString() {
         return degrees + "° " + minutes + "' " + seconds + "\"";

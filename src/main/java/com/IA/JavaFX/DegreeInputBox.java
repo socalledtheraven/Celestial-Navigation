@@ -1,4 +1,4 @@
-package com.IA.Swing;
+package com.IA.JavaFX;
 
 import javax.swing.JTextField;
 import java.awt.Graphics;

@@ -1,4 +1,4 @@
-package com.IA.Swing;
+package com.IA.JavaFX;
 
 import javax.swing.*;
 import java.awt.*;

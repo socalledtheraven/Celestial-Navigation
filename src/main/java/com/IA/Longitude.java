@@ -17,6 +17,10 @@ public class Longitude extends Degree {
         super(strDegrees);
     }
 
+    public Longitude(double doubDeg) {
+        super(doubDeg);
+    }
+
     public int getDegrees() {
         return super.getDegrees();
     }

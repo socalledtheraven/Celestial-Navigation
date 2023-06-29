@@ -1,12 +1,14 @@
 package com.IA;
 
 public class Plot {
-    private AssumedPosition AP;
+    private Latitude aLat;
+    private Longitude aLon;
     private AValue a;
     private double azimuth;
 
     public Plot(Latitude aLat, Longitude aLon, AValue a, double azimuth) {
-        this.AP = AP;
+        this.aLat = aLat;
+        this.aLon = aLon;
         this.a = a;
         this.azimuth = azimuth;
     }

@@ -1,19 +1,12 @@
 package com.IA;
 
-import javax.swing.*;
-import com.IA.Swing.*;
-
 public class Main {
     public static void main(String[] args) {
-/*
-        System.out.println(FileHandler.getDeclination("Polaris"));
-        FileHandler.dateToPageNum();
-*/
-        JFrame frame = new JFrame("Test menu");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        AddStarPage myGUI = new AddStarPage(600, 400);
-        frame.add(myGUI);
-        frame.pack();
-        frame.setVisible(true);
+        String starName = "Altair";
+        GeographicPosition gp = new GeographicPosition(starName);
+        DRPosition dr = new DRPosition(new Latitude(45.30), new Longitude(126.27));
+        AssumedPosition ap = new AssumedPosition(dr, gp);
+        AValue a = new AValue();
+        Plot p = new Plot(ap.getAssumedLatitude(), ap.getAssumedLongitude(), )
     }
 }
