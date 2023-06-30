@@ -3,10 +3,12 @@ package com.IA;
 public class AssumedPosition {
     private Latitude assumedLatitude;
     private Longitude assumedLongitude;
+    private Degree expectedHeight;
 
     public AssumedPosition(DRPosition dPos, GeographicPosition GP) {
         assumedLatitude = new Latitude(dPos.getLatitude().getDegrees());
         assumedLongitude = calculateAssumedLongitude(dPos, GP);
+        expectedHeight = calculateExpectedHeight();
     }
 
     private Longitude calculateAssumedLongitude(DRPosition dPos, GeographicPosition GP) {
@@ -22,6 +24,13 @@ public class AssumedPosition {
         } else {
             return new Longitude(dLonDegrees + 1, GHAMins);
         }
+    }
+
+    private Degree calculateExpectedHeight(GeographicPosition geographicPosition, DRPosition drPos) {
+        Latitude DRlat = drPos.getLatitude();
+        Longitude DRLon = drPos.getLongitude();
+
+        return Utilities.asin((Utilities.sin(geographicPosition) * Utilities.sin(DRlat)) + (Utilities.cos(geographicPosition) * Utilities.cos(DRlat) * Utilities.cos(LHA)));
     }
 
     public Latitude getAssumedLatitude() {

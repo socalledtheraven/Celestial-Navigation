@@ -4,27 +4,31 @@ import static java.lang.Math.sqrt;
 
 public class StarSight {
     private Star star;
-    private Degree angularHeight;
+    private Degree observedHeight;
     private Degree indexCorrection;
     private boolean indexCorrectionOn;
     private Direction hemisphere;
 
-    public StarSight(String name, Degree angularHeight, Degree indexCorrection, boolean indexCorrectionOn, Direction hemisphere) {
+    public StarSight(String name, Degree angularHeight, Degree indexCorrection, boolean indexCorrectionOn, double eyeHeight, Direction hemisphere) {
         star = new Star(name);
-        this.angularHeight = angularHeight;
+        this.observedHeight = angularHeightToObservedHeight(angularHeight, indexCorrection, indexCorrectionOn, eyeHeight);
         this.indexCorrection = indexCorrection;
         this.indexCorrectionOn = indexCorrectionOn;
         this.hemisphere = hemisphere;
     }
 
-    private double angularHeightToObservedHeight(double angularHeight, double indexCorrection, Boolean ICon,
+    private Degree angularHeightToObservedHeight(Degree angularHeight, Degree indexCorrection, Boolean ICon,
                                                  double eyeHeight) {
         // use altitude correction tables in almanac
-        double dip = Utilities.round(sqrt(eyeHeight), 1);
+        Degree dip = new Degree(Utilities.round(sqrt(eyeHeight), 1));
+        Degree precorrected;
         if (ICon) {
-            return angularHeight - indexCorrection - dip;
+            precorrected = Degree.subtract(angularHeight, indexCorrection);
+        } else {
+            precorrected = Degree.add(angularHeight, indexCorrection);
         }
-        return angularHeight + indexCorrection - dip;
+
+        return Degree.subtract(precorrected, dip);
     }
 
 
