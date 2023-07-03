@@ -4,7 +4,7 @@ public class Degree {
     private int degrees;
     private double minutes;
 
-    public Degree(int degrees, int minutes) {
+    public Degree(int degrees, double minutes) {
         this.degrees = degrees;
         this.minutes = minutes;
     }
@@ -37,28 +37,26 @@ public class Degree {
 
     @Override
     public String toString() {
-        return degrees + "° " + minutes + "' " + seconds + "\"";
+        return degrees + "° " + minutes + "' ";
     }
 
-    public double toDouble()
+    public double toDouble() {
+        return degrees + (minutes/100);
+    }
 
     public int getDegrees() {
         return degrees;
     }
 
-    public int getMinutes() {
+    public double getMinutes() {
         return minutes;
     }
 
-    public int getSeconds() {
-        return seconds;
-    }
-
     public static Degree add(Degree d1, Degree d2) {
-        return new Degree(d1.getDegrees() + d2.getDegrees(), d1.getMinutes() + d2.getMinutes(), d1.getSeconds() + d2.getSeconds());
+        return new Degree(d1.getDegrees() + d2.getDegrees(), d1.getMinutes() + d2.getMinutes());
     }
 
     public static Degree subtract(Degree d1, Degree d2) {
-        return new Degree(d1.getDegrees() - d2.getDegrees(), d1.getMinutes() - d2.getMinutes(), d1.getSeconds() - d2.getSeconds());
+        return new Degree(d1.getDegrees() - d2.getDegrees(), d1.getMinutes() - d2.getMinutes());
     }
 }

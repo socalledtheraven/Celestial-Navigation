@@ -63,8 +63,8 @@ public class FileHandler {
         }
     }
 
-    public static GeographicPosition getDeclination(String name) {
-        return new GeographicPosition(starDetails(name, almanacPageText(dateToPageNum()))[0][1]);
+    public static Degree getDeclination(String name) {
+        return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0][1]);
     }
 
     public static Degree getSHA(String name) {

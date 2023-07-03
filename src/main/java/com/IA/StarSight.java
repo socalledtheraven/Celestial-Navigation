@@ -31,5 +31,7 @@ public class StarSight {
         return Degree.subtract(precorrected, dip);
     }
 
-
+    public Degree getObservedHeight() {
+        return observedHeight;
+    }
 }

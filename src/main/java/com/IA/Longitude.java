@@ -1,11 +1,7 @@
 package com.IA;
 
 public class Longitude extends Degree {
-    public Longitude(int degrees, int minutes, int seconds) {
-        super(degrees, minutes, seconds);
-    }
-
-    public Longitude(int degrees, int minutes) {
+    public Longitude(int degrees, double minutes) {
         super(degrees, minutes);
     }
 
@@ -25,7 +21,7 @@ public class Longitude extends Degree {
         return super.getDegrees();
     }
 
-    public int getMinutes() {
+    public double getMinutes() {
         return super.getMinutes();
     }
 }
