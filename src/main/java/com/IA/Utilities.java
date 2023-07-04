@@ -13,6 +13,10 @@ public class Utilities {
         return Math.toDegrees(Math.asin(Math.toRadians(deg)));
     }
 
+    public static double acos(double deg) {
+        return Math.toDegrees(Math.acos(Math.toRadians(deg)));
+    }
+
     public static double round(double value, int precision) {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;

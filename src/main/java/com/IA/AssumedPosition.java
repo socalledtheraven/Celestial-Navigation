@@ -3,13 +3,14 @@ package com.IA;
 public class AssumedPosition {
     private Latitude assumedLatitude;
     private Longitude assumedLongitude;
-    private Degree expectedHeight;
-    private Degree LHA;
+    private double expectedHeight;
+    private Degree azimuth;
 
     public AssumedPosition(DRPosition dPos, Star star) {
         assumedLatitude = new Latitude(dPos.getLatitude().getDegrees());
         assumedLongitude = calculateAssumedLongitude(dPos, star);
         expectedHeight = calculateExpectedHeight(dPos, star);
+        azimuth = calculateAzimuth(star);
     }
 
     private Longitude calculateAssumedLongitude(DRPosition dPos, Star star) {
@@ -27,23 +28,33 @@ public class AssumedPosition {
         }
     }
 
-    private Degree calculateExpectedHeight(DRPosition drPos, Star star) {
+    private double calculateExpectedHeight(DRPosition drPos, Star star) {
         Latitude DRlat = drPos.getLatitude();
-        Longitude DRLon = drPos.getLongitude();
-        Degree LHA = star.getLHA();
+        Degree LHA = calculateLHA(star);
+        System.out.println(LHA);
 
-        return Utilities.asin((Utilities.sin(geographicPosition.toDouble()) * Utilities.sin(DRlat.toDouble())) + (Utilities.cos(geographicPosition.toDouble()) * Utilities.cos(DRlat.toDouble()) * Utilities.cos(LHA)));
+        System.out.println(star.getDeclination());
+        System.out.println(star.getDeclination().toDouble());
+        return Utilities.asin((Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())) + (Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * Utilities.cos(LHA.toDouble())));
     }
 
     private Degree calculateLHA(Star star) {
         // also handle with east and west stuff
-        double LHA = star. - Alon;
-        if (LHA < 0) {
-            LHA += 360;
-        } else if (LHA > 360) {
-            LHA -= 360;
+        Degree LHA = Degree.subtract(star.getGreenwichHourAngle(), assumedLongitude);
+        if (LHA.toDouble() < 0) {
+            LHA = Degree.add(LHA, new Degree(360));
+        } else if (LHA.toDouble() > 360) {
+            LHA = Degree.subtract(LHA, new Degree(360));
         }
         return LHA;
+    }
+
+    private Degree calculateAzimuth(Star star) {
+        double Z = Utilities.acos((Utilities.sin(star.getDeclination().toDouble())) - Utilities.sin(assumedLatitude.toDouble()) * Utilities.sin(expectedHeight)) / (Utilities.cos(assumedLatitude.toDouble()) * Utilities.cos(expectedHeight));
+        if (Z < 0) {
+            Z += 360;
+        }
+        return new Degree(Z);
     }
 
     public Latitude getAssumedLatitude() {
@@ -54,7 +65,11 @@ public class AssumedPosition {
         return assumedLongitude;
     }
 
-    public Degree getExpectedHeight() {
+    public double getExpectedHeight() {
         return expectedHeight;
+    }
+
+    public Degree getAzimuth() {
+        return azimuth;
     }
 }

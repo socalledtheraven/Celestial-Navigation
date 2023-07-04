@@ -15,9 +15,9 @@ public class FileHandler {
 //    private static LocalDateTime now = LocalDateTime.of(2023, 6, 25, 2, 4);
     public static void savePlot(Plot p, String path) {
         ArrayList<String> lines = new ArrayList<>();
-        lines.add("a:" + p.getA().toString() + ",");
+        lines.add("a:" + p.getAValue().toString() + ",");
         lines.add("az:" + p.getAzimuth() + ",");
-        lines.add("ap=alat:" + p.getAP().getAssumedLatitude().toString() + ",alon:" + p.getAP().getAssumedLongitude().toString() + ",");
+        lines.add("ap=alat:" + p.getAssumedLatitude().toString() + ",alon:" + p.getAssumedLongitude().toString() + ",");
         for (String l : lines) {
             appendToFile(l, path);
         }
@@ -28,7 +28,7 @@ public class FileHandler {
         String a = lines.get(0).split(":")[1].replace(",", "").strip();
         AValue aVal = new AValue(a);
         String az = lines.get(1).split(":")[1].replace(",", "").strip();
-        double azimuth = Double.parseDouble(az);
+        Degree azimuth = new Degree(az);
         String lat = lines.get(2).split("=")[1].split(",")[0].split(":")[1];
         Latitude aLat = new Latitude(lat);
         String lon = lines.get(2).split("=")[1].split(",")[1].replace(",", "").split(":")[1];
@@ -124,7 +124,6 @@ public class FileHandler {
             if (i != 0) {
                 Degree GHA = new Degree(line.split(" ")[1]);
                 hourlyDetails[i] = GHA;
-                System.out.println(GHA);
             }
         }
 

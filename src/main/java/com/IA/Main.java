@@ -8,8 +8,10 @@ public class Main {
         AssumedPosition ap = new AssumedPosition(dr, star);
         StarSight s = new StarSight(starName, new Degree(35.189),0, false, 12.0, Direction.NORTH);
         Degree Ho = s.getObservedHeight();
-        Degree Hc = ap.getExpectedHeight();
+        double Hc = ap.getExpectedHeight();
         AValue a = new AValue(Hc, Ho);
-        Plot p = new Plot(ap.getAssumedLatitude(), ap.getAssumedLongitude(), a, )
+        Degree az = ap.getAzimuth();
+        Plot p = new Plot(ap.getAssumedLatitude(), ap.getAssumedLongitude(), a, az);
+        System.out.println(p.toString());
     }
 }

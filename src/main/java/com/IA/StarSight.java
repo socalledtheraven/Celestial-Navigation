@@ -3,29 +3,23 @@ package com.IA;
 import static java.lang.Math.sqrt;
 
 public class StarSight {
-    private Star star;
     private Degree observedHeight;
-    private Degree indexCorrection;
-    private boolean indexCorrectionOn;
     private Direction hemisphere;
 
-    public StarSight(String name, Degree angularHeight, Degree indexCorrection, boolean indexCorrectionOn, double eyeHeight, Direction hemisphere) {
-        star = new Star(name);
+    public StarSight(String name, Degree angularHeight, double indexCorrection, boolean indexCorrectionOn, double eyeHeight, Direction hemisphere) {
         this.observedHeight = angularHeightToObservedHeight(angularHeight, indexCorrection, indexCorrectionOn, eyeHeight);
-        this.indexCorrection = indexCorrection;
-        this.indexCorrectionOn = indexCorrectionOn;
         this.hemisphere = hemisphere;
     }
 
-    private Degree angularHeightToObservedHeight(Degree angularHeight, Degree indexCorrection, Boolean ICon,
+    private Degree angularHeightToObservedHeight(Degree angularHeight, double indexCorrection, Boolean ICon,
                                                  double eyeHeight) {
         // use altitude correction tables in almanac
         Degree dip = new Degree(Utilities.round(sqrt(eyeHeight), 1));
         Degree precorrected;
         if (ICon) {
-            precorrected = Degree.subtract(angularHeight, indexCorrection);
+            precorrected = Degree.subtract(angularHeight, new Degree(indexCorrection));
         } else {
-            precorrected = Degree.add(angularHeight, indexCorrection);
+            precorrected = Degree.add(angularHeight, new Degree(indexCorrection));
         }
 
         return Degree.subtract(precorrected, dip);
