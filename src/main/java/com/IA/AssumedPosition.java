@@ -31,10 +31,17 @@ public class AssumedPosition {
     private double calculateExpectedHeight(DRPosition drPos, Star star) {
         Latitude DRlat = drPos.getLatitude();
         Degree LHA = calculateLHA(star);
-        System.out.println(LHA);
+        System.out.println("LHA " + LHA);
+        System.out.println("Utilities.cos(LHA.toDouble()) " + Utilities.cos(LHA.toDouble()));
 
-        System.out.println(star.getDeclination());
-        System.out.println(star.getDeclination().toDouble());
+        System.out.println("star.getDeclination().toDouble() " + star.getDeclination().toDouble());
+        System.out.println("Utilities.sin(star.getDeclination().toDouble()) " + Utilities.sin(star.getDeclination().toDouble()));
+        System.out.println("Utilities.cos(star.getDeclination().toDouble()) " + Utilities.cos(star.getDeclination().toDouble()));
+        System.out.println("DRlat.toDouble() " + DRlat.toDouble());
+        System.out.println("Utilities.sin/cos(DRlat.toDouble()) " + Utilities.sin(DRlat.toDouble()));
+        System.out.println("(Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * " +
+                "Utilities.cos(LHA.toDouble())) " + (Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * Utilities.cos(LHA.toDouble())));
+        System.out.println("(Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())) " + (Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())));
         return Utilities.asin((Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())) + (Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * Utilities.cos(LHA.toDouble())));
     }
 
