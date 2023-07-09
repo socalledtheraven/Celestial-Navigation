@@ -2,19 +2,22 @@ package com.IA;
 
 public class Utilities {
     public static double cos(double deg) {
-        return Math.toDegrees(Math.cos(Math.toRadians(deg)));
+        return Math.cos(Math.toRadians(deg));
     }
 
     public static double sin(double deg) {
-        return Math.toDegrees(Math.sin(Math.toRadians(deg)));
+        return Math.sin(Math.toRadians(deg));
     }
 
     public static double asin(double deg) {
-        return Math.toDegrees(Math.asin(Math.toRadians(deg)));
+        if (deg > 1) {
+            deg %= Math.PI;
+        }
+        return Math.toDegrees(Math.asin(deg));
     }
 
     public static double acos(double deg) {
-        return Math.toDegrees(Math.acos(Math.toRadians(deg)));
+        return Math.toDegrees(Math.acos(deg));
     }
 
     public static double round(double value, int precision) {

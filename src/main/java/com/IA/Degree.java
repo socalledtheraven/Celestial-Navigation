@@ -5,6 +5,14 @@ public class Degree {
     private double minutes;
 
     public Degree(int degrees, double minutes) {
+        while (minutes > 60) {
+            minutes -= 60;
+            degrees++;
+        }
+        while (minutes < 0) {
+            minutes += 60;
+            degrees--;
+        }
         this.degrees = degrees;
         this.minutes = minutes;
     }
@@ -21,18 +29,12 @@ public class Degree {
             parts = strDegrees.split("◦");
         }
         this.degrees = Integer.parseInt(parts[0]);
-        String[] parts2;
-        if (parts[1].contains("'")) {
-            parts2 = parts[1].split("'");
-        } else {
-            parts2 = parts[1].split("\\.");
-        }
-        this.minutes = Integer.parseInt(parts2[0]);
+        this.minutes = Utilities.round(Double.parseDouble(parts[1]), 2);
     }
 
     public Degree(double doubDeg) {
-        this.minutes = (int) (doubDeg % 1);
-        this.degrees = (int) (doubDeg - minutes);
+        this.degrees = (int) Math.floor(doubDeg);
+        this.minutes = 100 * (Utilities.round(doubDeg - this.degrees, 2));
     }
 
     @Override
@@ -53,10 +55,16 @@ public class Degree {
     }
 
     public static Degree add(Degree d1, Degree d2) {
-        return new Degree(d1.getDegrees() + d2.getDegrees(), d1.getMinutes() + d2.getMinutes());
+        return new Degree((int) Utilities.round(d1.getDegrees() + d2.getDegrees(), 2),
+                Utilities.round(d1.getMinutes() + d2.getMinutes(), 2));
     }
 
     public static Degree subtract(Degree d1, Degree d2) {
-        return new Degree(d1.getDegrees() - d2.getDegrees(), d1.getMinutes() - d2.getMinutes());
+        return new Degree((int) Utilities.round(d1.getDegrees() - d2.getDegrees(), 2),
+                Utilities.round((d1.getMinutes() - d2.getMinutes()), 2));
+    }
+
+    public static Degree divide(Degree d1, int denom) {
+        return new Degree(d1.getDegrees() / denom, d1.getMinutes() / denom);
     }
 }

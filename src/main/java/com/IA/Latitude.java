@@ -1,6 +1,7 @@
 package com.IA;
 
 public class Latitude extends Degree {
+    private Direction direction;
     public Latitude(int degrees, double minutes) {
         super(degrees, minutes);
     }
@@ -13,8 +14,9 @@ public class Latitude extends Degree {
         super(strDegrees);
     }
 
-    public Latitude(double doubDeg) {
+    public Latitude(double doubDeg, Direction dir) {
         super(doubDeg);
+        direction = dir;
     }
 
     public int getDegrees() {

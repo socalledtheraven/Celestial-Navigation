@@ -8,41 +8,27 @@ public class AssumedPosition {
 
     public AssumedPosition(DRPosition dPos, Star star) {
         assumedLatitude = new Latitude(dPos.getLatitude().getDegrees());
-        assumedLongitude = calculateAssumedLongitude(dPos, star);
+        assumedLongitude = calculateAssumedLongitude(dPos);
+        System.out.println("alon: " + assumedLongitude);
         expectedHeight = calculateExpectedHeight(dPos, star);
         azimuth = calculateAzimuth(star);
     }
 
-    private Longitude calculateAssumedLongitude(DRPosition dPos, Star star) {
-        double dLonMins = dPos.getLongitude().getMinutes();
-        double GHAMins = star.getGreenwichHourAngle().getMinutes();
+    private Longitude calculateAssumedLongitude(DRPosition dPos) {
+        double dLonDegs = dPos.getLongitude().getDegrees();
+        double GHAMins = FileHandler.getAriesGHA().getMinutes();
 
-        double distanceToY = Math.abs(dLonMins-GHAMins);
-        double distanceToYPlusOne = Math.abs(dLonMins - (GHAMins + 1));
-        // make alon within 0.3 of DR-lon, ignoring whole-number differences.
-        int dLonDegrees = dPos.getLongitude().getDegrees();
-        if (distanceToY > distanceToYPlusOne) {
-            return new Longitude(dLonDegrees, GHAMins);
-        } else {
-            return new Longitude(dLonDegrees + 1, GHAMins);
-        }
+        return new Longitude((int) dLonDegs, GHAMins);
     }
 
     private double calculateExpectedHeight(DRPosition drPos, Star star) {
-        Latitude DRlat = drPos.getLatitude();
-        Degree LHA = calculateLHA(star);
-        System.out.println("LHA " + LHA);
-        System.out.println("Utilities.cos(LHA.toDouble()) " + Utilities.cos(LHA.toDouble()));
+        double DRlat = drPos.getLatitude().toDouble();
+        double LHA = calculateLHA(star).toDouble();
+        double dec = star.getDeclination().toDouble();
 
-        System.out.println("star.getDeclination().toDouble() " + star.getDeclination().toDouble());
-        System.out.println("Utilities.sin(star.getDeclination().toDouble()) " + Utilities.sin(star.getDeclination().toDouble()));
-        System.out.println("Utilities.cos(star.getDeclination().toDouble()) " + Utilities.cos(star.getDeclination().toDouble()));
-        System.out.println("DRlat.toDouble() " + DRlat.toDouble());
-        System.out.println("Utilities.sin/cos(DRlat.toDouble()) " + Utilities.sin(DRlat.toDouble()));
-        System.out.println("(Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * " +
-                "Utilities.cos(LHA.toDouble())) " + (Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * Utilities.cos(LHA.toDouble())));
-        System.out.println("(Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())) " + (Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())));
-        return Utilities.asin((Utilities.sin(star.getDeclination().toDouble()) * Utilities.sin(DRlat.toDouble())) + (Utilities.cos(star.getDeclination().toDouble()) * Utilities.cos(DRlat.toDouble()) * Utilities.cos(LHA.toDouble())));
+        double realValue = (Utilities.sin(dec) * Utilities.sin(DRlat)) + (Utilities.cos(dec) * Utilities.cos(DRlat) * Utilities.cos(LHA));
+        System.out.println("Hc: " + Utilities.asin(realValue));
+        return Utilities.asin(realValue);
     }
 
     private Degree calculateLHA(Star star) {
@@ -53,14 +39,20 @@ public class AssumedPosition {
         } else if (LHA.toDouble() > 360) {
             LHA = Degree.subtract(LHA, new Degree(360));
         }
+        System.out.println("LHA: " + LHA);
         return LHA;
     }
 
     private Degree calculateAzimuth(Star star) {
-        double Z = Utilities.acos((Utilities.sin(star.getDeclination().toDouble())) - Utilities.sin(assumedLatitude.toDouble()) * Utilities.sin(expectedHeight)) / (Utilities.cos(assumedLatitude.toDouble()) * Utilities.cos(expectedHeight));
-        if (Z < 0) {
-            Z += 360;
+        double dec = star.getDeclination().toDouble();
+        double alat = assumedLatitude.toDouble();
+
+        double Z =
+                Utilities.acos((Utilities.sin(dec) - Utilities.sin(alat) * Utilities.sin(expectedHeight)) / (Utilities.cos(alat) * Utilities.cos(expectedHeight)));
+        if (calculateLHA(star).getDegrees() < 180) {
+            Z -= 360;
         }
+
         return new Degree(Z);
     }
 

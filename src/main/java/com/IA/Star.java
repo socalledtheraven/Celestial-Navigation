@@ -1,14 +1,13 @@
 package com.IA;
 
 public class Star {
-    private String name;
     private Degree declination;
     private Degree greenwichHourAngle;
 
     public Star(String n) {
-        name = n;
-        declination = FileHandler.getDeclination(name);
-        greenwichHourAngle = Degree.add(FileHandler.getSHA(name), FileHandler.getAriesGHA());
+        declination = FileHandler.getDeclination(n);
+        System.out.println("GHA: " + FileHandler.getAriesGHA());
+        greenwichHourAngle = Degree.add(FileHandler.getSHA(n), FileHandler.getAriesGHA());
     }
 
     public Degree getGreenwichHourAngle() {

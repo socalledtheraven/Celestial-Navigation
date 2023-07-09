@@ -1,27 +1,28 @@
 package com.IA;
 
 public class AValue {
-    private final double value;
+    private final Degree value;
     private final Towards towards;
     public AValue(double Hc, Degree Ho) {
         super();
-        System.out.println(Hc + " " + Ho);
         if (Hc > Ho.getMinutes()) {
             towards = Towards.AWAY;
-            value = Hc - Ho.getMinutes();
+            value = new Degree(Hc - Ho.toDouble());
         } else {
             towards = Towards.TOWARDS;
-            value = Ho.getMinutes() - Hc;
+            value = new Degree(Ho.toDouble() - Hc);
         }
+
+        System.out.println(this);
     }
 
     public AValue(String a) {
         String[] parts = a.split("=");
-        value = Double.parseDouble(parts[0]);
+        value = new Degree(parts[0]);
         towards = Towards.valueOf(parts[1]);
     }
 
-    public double getValue() {
+    public Degree getValue() {
         return value;
     }
 
