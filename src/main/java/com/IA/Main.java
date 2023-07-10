@@ -1,16 +1,34 @@
 package com.IA;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         /* Hs = angular height
         * */
 
-        String starName = "Alpheratz";
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter star name: ");
+        String starName = s.nextLine();
         Star star = new Star(starName);
-        DRPosition dr = new DRPosition(new Latitude(40, Direction.NORTH), new Longitude(75, Direction.WEST));
+        System.out.println("Enter dead reckoning latitude (format x° y.z' N): ");
+        Latitude drlat = new Latitude(s.nextLine());
+        System.out.println("Enter dead reckoning longitude (format x° y.z' W): ");
+        Longitude drlon = new Longitude(s.nextLine());
+        DRPosition dr = new DRPosition(drlat, drlon);
         AssumedPosition ap = new AssumedPosition(dr, star);
-        StarSight s = new StarSight(new Degree(84.43), new Degree(0, 1), true, 0.0, Direction.NORTH);
-        Degree Ho = s.getObservedHeight();
+        System.out.println("Enter angular height: ");
+        Degree angHeight = new Degree(s.nextLine());
+        System.out.println("Enter index correction: ");
+        Degree ic = new Degree(s.nextLine());
+        System.out.println("is it on? ");
+        boolean icon = s.nextBoolean();
+        System.out.println("Enter eye height: ");
+        double eyeheight = s.nextDouble();
+        System.out.println("What hemisphere are you in? ");
+        Direction hemisphere = Direction.valueOf(s.nextLine());
+        StarSight st = new StarSight(angHeight, ic, icon, eyeheight, hemisphere);
+        Degree Ho = st.getObservedHeight();
         double Hc = ap.getExpectedHeight();
         AValue a = new AValue(Hc, Ho);
         Degree az = ap.getAzimuth();

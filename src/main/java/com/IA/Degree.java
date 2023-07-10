@@ -3,6 +3,7 @@ package com.IA;
 public class Degree {
     private int degrees;
     private double minutes;
+    private Direction direction;
 
     public Degree(int degrees, double minutes) {
         while (minutes > 60) {
@@ -22,14 +23,15 @@ public class Degree {
     }
 
     public Degree(String strDegrees) {
-        String[] parts;
-        if (strDegrees.contains("°")) {
-            parts = strDegrees.split("°");
-        } else {
-            parts = strDegrees.split("◦");
+        String[] parts = strDegrees.split(" ");
+        this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", ""));
+        this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
+        switch (parts[2]) {
+            case "N" -> this.direction = Direction.NORTH;
+            case "E" -> this.direction = Direction.EAST;
+            case "S" -> this.direction = Direction.SOUTH;
+            case "W" -> this.direction = Direction.WEST;
         }
-        this.degrees = Integer.parseInt(parts[0]);
-        this.minutes = Utilities.round(Double.parseDouble(parts[1]), 2);
     }
 
     public Degree(double doubDeg) {
