@@ -7,6 +7,8 @@ module com.ia.javafx {
             requires net.synedra.validatorfx;
                 requires org.kordamp.bootstrapfx.core;
 	requires org.apache.pdfbox;
+	requires org.jfree.chart.fx;
+	requires org.jfree.jfreechart;
 
 	opens com.ia.javafx to javafx.fxml;
     exports com.ia.javafx;
