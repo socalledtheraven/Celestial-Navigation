@@ -1,4 +1,4 @@
-package com.IA;
+package com.ia;
 
 public class Longitude extends Degree {
     private Direction direction;

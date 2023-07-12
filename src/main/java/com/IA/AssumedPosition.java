@@ -1,4 +1,4 @@
-package com.IA;
+package com.ia;
 
 public class AssumedPosition {
     private Latitude assumedLatitude;

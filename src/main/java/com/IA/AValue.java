@@ -1,4 +1,4 @@
-package com.IA;
+package com.ia;
 
 public class AValue {
     private final Degree value;

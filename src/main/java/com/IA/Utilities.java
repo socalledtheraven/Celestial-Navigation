@@ -1,4 +1,4 @@
-package com.IA;
+package com.ia;
 
 public class Utilities {
     public static double cos(double deg) {

@@ -1,4 +1,4 @@
-package com.IA;
+package com.ia;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;

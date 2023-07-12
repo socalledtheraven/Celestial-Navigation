@@ -1,4 +1,4 @@
-module com.ia.ia {
+module com.ia.javafx {
     requires javafx.controls;
     requires javafx.fxml;
             
@@ -6,7 +6,8 @@ module com.ia.ia {
             requires com.dlsc.formsfx;
             requires net.synedra.validatorfx;
                 requires org.kordamp.bootstrapfx.core;
-            
-    opens com.IA.JavaFX to javafx.fxml;
-    exports com.IA.JavaFX;
+	requires org.apache.pdfbox;
+
+	opens com.ia.javafx to javafx.fxml;
+    exports com.ia.javafx;
 }

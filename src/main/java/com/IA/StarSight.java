@@ -1,4 +1,4 @@
-package com.IA;
+package com.ia;
 
 import static java.lang.Math.sqrt;
 
