@@ -9,6 +9,7 @@ module com.ia.javafx {
 	requires org.apache.pdfbox;
 	requires org.jfree.chart.fx;
 	requires org.jfree.jfreechart;
+	requires java.desktop;
 
 	opens com.ia.javafx to javafx.fxml;
     exports com.ia.javafx;
