@@ -18,6 +18,7 @@ import org.jfree.data.xy.XYDataset;
 import java.awt.*;
 
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -26,7 +27,7 @@ public class HelloApplication extends Application {
         // it works like {y, x} where x is how far you are along clockwise, and y is how high up you are - only go to
         // 60!
         for (int i = 0; i < data.length; i++) {
-            dataset.addSeries("sight" + (i+1), data[i]);
+            dataset.addSeries("Sight " + (i+1), data[i]);
         }
         return dataset;
     }
@@ -55,12 +56,30 @@ public class HelloApplication extends Application {
     }
 
     private static double[] findIntersection(XYDataset dataset) {
-        for (int i = 0; i < dataset.getSeriesCount(); i++) {
-            for (int j = 0; j < dataset.getItemCount(i); j++) {
-                Line2D l1 = new Line2D.Double(dataset.getXValue(j, i)., dataset.getYValue(j, i));
+        double x1 = dataset.getXValue(0, 0);
+        double y1 = dataset.getYValue(0, 0);
+        double x2 = dataset.getXValue(1, 0);
+        double y2 = dataset.getYValue(1, 0);
+        Point2D p1 = new Point2D.Double(x1, y1);
+        Point2D p2 = new Point2D.Double(x2, y2);
+        Line2D l1 = new Line2D.Double(p1, p2);
+        double m1 = (y2 - y1) / (x2 - x1);
+        double c1 = y1 - m1 * x1;
 
-            }
-            
+        double x3 = dataset.getXValue(0, 1);
+        double y3 = dataset.getYValue(0, 1);
+        double x4 = dataset.getXValue(1, 1);
+        double y4 = dataset.getYValue(1, 1);
+	    p1 = new Point2D.Double(x3, y3);
+	    p2 = new Point2D.Double(x4, y4);
+	    Line2D l2 = new Line2D.Double(p1, p2);
+        double m2 = (y4 - y3) / (x4 - x3);
+        double c2 = y3 - m2 * x3;
+
+	    if (l1.intersectsLine(l2)) {
+	        return new double[]{(c2-c1) / (m1-m2), (m1 * (c2-c1) / (m1-m2)) + c1};
+	    } else {
+            return null;
         }
     }
 
@@ -68,8 +87,8 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 
-
-        double[][][] d = {{{2, 5}, {60, 31}}, {{56, 23}, {43, 47}}};
+// {x, x}, {y, y}
+        double[][][] d = {{{1, 1}, {60, 90}}};
         JFreeChart chart = createChart(createDataset(d));
         ChartViewer viewer = new ChartViewer(chart);
         stage.setScene(new Scene(viewer));
