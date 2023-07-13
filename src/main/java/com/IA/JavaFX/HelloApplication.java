@@ -16,14 +16,18 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
 import java.awt.*;
+
+import java.awt.geom.Line2D;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
-    private static XYDataset createDataset() {
+    private static XYDataset createDataset(double[][][] data) {
         DefaultXYDataset dataset = new DefaultXYDataset();
         // it works like {y, x} where x is how far you are along clockwise, and y is how high up you are - only go to
         // 60!
-        dataset.addSeries("points", new double[][]{{30, 45}, {60, 4}});
+        for (int i = 0; i < data.length; i++) {
+            dataset.addSeries("sight" + (i+1), data[i]);
+        }
         return dataset;
     }
 
@@ -46,9 +50,18 @@ public class HelloApplication extends Application {
         a2.setTickLabelsVisible(true);
         a2.setMinorTickMarksVisible(true);
         a2.setInverted(true);
-        a2.setLabelFont(new Font());
         a2.setRange(new Range(0, 60));
         return c;
+    }
+
+    private static double[] findIntersection(XYDataset dataset) {
+        for (int i = 0; i < dataset.getSeriesCount(); i++) {
+            for (int j = 0; j < dataset.getItemCount(i); j++) {
+                Line2D l1 = new Line2D.Double(dataset.getXValue(j, i)., dataset.getYValue(j, i));
+
+            }
+            
+        }
     }
 
     @Override
@@ -56,7 +69,8 @@ public class HelloApplication extends Application {
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 
 
-        JFreeChart chart = createChart(createDataset());
+        double[][][] d = {{{2, 5}, {60, 31}}, {{56, 23}, {43, 47}}};
+        JFreeChart chart = createChart(createDataset(d));
         ChartViewer viewer = new ChartViewer(chart);
         stage.setScene(new Scene(viewer));
         stage.setTitle("JFreeChart: polarplot");
