@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Circle fill="#ffffff00" layoutX="314.0" layoutY="200.0" radius="174.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.5" />
+      <Line endY="374.0" layoutX="314.0" layoutY="26.0" startX="-1.0" startY="-26.0" />
+      <Line endX="314.0" endY="-1.52587890625E-5" layoutX="312.0" layoutY="26.0" startX="-312.0" startY="-1.52587890625E-5" />
+      <Line endX="311.0" endY="-1.52587890625E-5" layoutX="315.0" layoutY="200.0" startX="-315.0" startY="-1.52587890625E-5" />
+      <Line endX="312.0" layoutX="314.0" layoutY="374.0" startX="-314.0" />
+      <Label id="topLabel" layoutX="584.0" layoutY="6.0" text="Label" />
+      <Label layoutX="584.0" layoutY="183.0" text="Label" />
+      <Label layoutX="584.0" layoutY="357.0" text="Label" />
+   </children>
+</Pane>
