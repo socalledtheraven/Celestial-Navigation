@@ -33,4 +33,12 @@ public class Coordinate {
 	public double[] getPolarCoordinates() {
 		return new double[] {radius, angle};
 	}
+
+	public double getX() {
+		return cartesianX;
+	}
+
+	public double getY() {
+		return cartesianY;
+	}
 }
