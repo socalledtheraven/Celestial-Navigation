@@ -5,13 +5,12 @@ import com.ia.Latitude;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 import static java.lang.Math.sqrt;
 
-public class polarController {
+public class PolarController {
 	@FXML
 	private Pane mainPane;
     @FXML

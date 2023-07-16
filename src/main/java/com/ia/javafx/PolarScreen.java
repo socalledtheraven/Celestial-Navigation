@@ -13,8 +13,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class polarScreen extends Application {
-    static polarController controller;
+public class PolarScreen extends Application {
+    static PolarController controller;
     private double LONRATIO;
     private double CIRCLERADIUS;
 
@@ -36,9 +36,9 @@ public class polarScreen extends Application {
 			DRLatitudes[i] = data[3];
 	    }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(polarScreen.class.getResource("plotScreen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(PolarScreen.class.getResource("plotScreen.fxml"));
         Parent root = fxmlLoader.load();
-        controller = (polarController) fxmlLoader.getController();
+        controller = (PolarController) fxmlLoader.getController();
 
 		// declarations bunched up bc for loops are annoying
         CIRCLERADIUS = controller.compassRoseRadius();
