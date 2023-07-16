@@ -1,6 +1,8 @@
 package com.ia;
 
 public class Longitude extends Degree {
+    // a Degree instance but with a direction - E or W
+    // TODO: actually make the direction matter
     private Direction direction;
     public Longitude(int degrees, double minutes) {
         super(degrees, minutes);

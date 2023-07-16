@@ -7,14 +7,15 @@ public class AssumedPosition {
     private Degree azimuth;
 
     public AssumedPosition(DRPosition dPos, Star star) {
+        // assumed latitude is just the degrees of dr position
         assumedLatitude = new Latitude(dPos.getLatitude().getDegrees());
         assumedLongitude = calculateAssumedLongitude(dPos);
-        System.out.println("alon: " + assumedLongitude);
         expectedHeight = calculateExpectedHeight(dPos, star);
         azimuth = calculateAzimuth(star);
     }
 
     private Longitude calculateAssumedLongitude(DRPosition dPos) {
+        // assumed longitude is the degrees of dr position & the minutes of aries, for some reason
         double dLonDegs = dPos.getLongitude().getDegrees();
         double GHAMins = FileHandler.getAriesGHA().getMinutes();
 
@@ -22,31 +23,34 @@ public class AssumedPosition {
     }
 
     private double calculateExpectedHeight(DRPosition drPos, Star star) {
+        // this is for the expected height (through sextant, like the angular height) at the assumed position
         double DRlat = drPos.getLatitude().toDouble();
         double LHA = calculateLHA(star).toDouble();
         double dec = star.getDeclination().toDouble();
 
+        // using the standard formula for calculating expected height
         double realValue = (Utilities.sin(dec) * Utilities.sin(DRlat)) + (Utilities.cos(dec) * Utilities.cos(DRlat) * Utilities.cos(LHA));
-        System.out.println("Hc: " + Utilities.asin(realValue));
         return Utilities.asin(realValue);
     }
 
     private Degree calculateLHA(Star star) {
-        // also handle with east and west stuff
+        // calculates the Local Hour Angle
+        // TODO: also handle with hemisphere/direction
         Degree LHA = Degree.subtract(star.getGreenwichHourAngle(), assumedLongitude);
         if (LHA.toDouble() < 0) {
             LHA = Degree.add(LHA, new Degree(360));
         } else if (LHA.toDouble() > 360) {
             LHA = Degree.subtract(LHA, new Degree(360));
         }
-        System.out.println("LHA: " + LHA);
         return LHA;
     }
 
     private Degree calculateAzimuth(Star star) {
+        // calculates the azimuth (the angle from the assumed position to the GP)
         double dec = star.getDeclination().toDouble();
         double alat = assumedLatitude.toDouble();
 
+        // uses standard azimuth formula
         double Z =
                 Utilities.acos((Utilities.sin(dec) - Utilities.sin(alat) * Utilities.sin(expectedHeight)) / (Utilities.cos(alat) * Utilities.cos(expectedHeight)));
         if (calculateLHA(star).getDegrees() < 180) {

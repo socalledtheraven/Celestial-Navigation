@@ -1,6 +1,8 @@
 package com.ia;
 
 public class DRPosition {
+    // it's a container class
+    // what more can I say?
     private Latitude lat;
     private Longitude lon;
 

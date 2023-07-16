@@ -13,18 +13,19 @@ public class StarSight {
 
     private Degree angularHeightToObservedHeight(Degree angularHeight, Degree indexCorrection, Boolean ICon, double eyeHeight) {
         // use altitude correction tables in almanac
-        Degree dip = new Degree(Utilities.round(sqrt(eyeHeight)*0.97, 1));
+        // dip is the correction needed to account for the lensing affect of the atmosphere
         Degree precorrected;
+
+        // index error is just how much your sextant is off by
         if (ICon) {
             precorrected = Degree.subtract(angularHeight, indexCorrection);
         } else {
             precorrected = Degree.add(angularHeight, indexCorrection);
         }
 
+        Degree dip = new Degree(Utilities.round(sqrt(eyeHeight)*0.97, 1));
         Degree apparentHeight = Degree.divide(Degree.subtract(precorrected, dip), 2);
-        System.out.println("apparentHeight: " + apparentHeight);
         Degree observedHeight = Degree.add(apparentHeight, FileHandler.altitudeCorrection(apparentHeight));
-        System.out.println("observedHeight: " + observedHeight);
         return observedHeight;
     }
 

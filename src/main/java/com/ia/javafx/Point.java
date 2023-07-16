@@ -5,33 +5,29 @@ import com.ia.Utilities;
 
 import static java.lang.Math.sqrt;
 
-public class Coordinate {
+public class Point {
+	// allows for easy handling both of individual points and cartesian/polar coordinates
 	private double cartesianX;
 	private double cartesianY;
 	private double radius;
 	private double angle;
 
-	public Coordinate(double cartesianX, double cartesianY) {
+	public Point(double cartesianX, double cartesianY) {
 		this.cartesianX = cartesianX;
 		this.cartesianY = cartesianY;
+		// calculates using pythagoras
 		radius = sqrt((cartesianX * cartesianX) + (cartesianY * cartesianY));
+		// atan2 is a builtin
 		angle = Math.atan2(cartesianY, cartesianX);
 	}
 
-	public Coordinate(double r, Degree a) {
+	public Point(double r, Degree a) {
 		radius = r;
 		angle = a.toDouble();
 		angle -= 90;
+		// calculates back using SOH CAH TOA
 		cartesianX = radius * Utilities.cos(angle);
 		cartesianY = radius * Utilities.sin(angle);
-	}
-
-	public double[] getCartesianCoordinates() {
-		return new double[] {cartesianX, cartesianY};
-	}
-
-	public double[] getPolarCoordinates() {
-		return new double[] {radius, angle};
 	}
 
 	public double getX() {

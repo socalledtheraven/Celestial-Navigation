@@ -1,6 +1,7 @@
 package com.ia;
 
 public class Star {
+    // a data class containing data for a star received from the Almanac
     private Degree declination;
     private Degree greenwichHourAngle;
 

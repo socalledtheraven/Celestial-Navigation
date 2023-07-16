@@ -6,6 +6,7 @@ public class Degree {
     private Direction direction;
 
     public Degree(int degrees, double minutes) {
+        // error handling for minute overflow
         while (minutes > 60) {
             minutes -= 60;
             degrees++;
@@ -24,8 +25,10 @@ public class Degree {
 
     public Degree(String strDegrees) {
         String[] parts = strDegrees.split(" ");
+        // deals with standard degree symbols and the weird ones the almanac uses
         this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", ""));
         this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
+        // cool switch statement enum thing!
         switch (parts[2]) {
             case "N" -> this.direction = Direction.NORTH;
             case "E" -> this.direction = Direction.EAST;
@@ -35,6 +38,7 @@ public class Degree {
     }
 
     public Degree(double doubDeg) {
+        // takes whole numbers for degrees and decimal parts for minutes
         this.degrees = (int) Math.floor(doubDeg);
         this.minutes = 100 * (Utilities.round(doubDeg - this.degrees, 2));
     }
@@ -57,11 +61,13 @@ public class Degree {
     }
 
     public static Degree add(Degree d1, Degree d2) {
+        // adds each individual part and returns a new Degree
         return new Degree((int) Utilities.round(d1.getDegrees() + d2.getDegrees(), 2),
                 Utilities.round(d1.getMinutes() + d2.getMinutes(), 2));
     }
 
     public static Degree subtract(Degree d1, Degree d2) {
+        // see above
         return new Degree((int) Utilities.round(d1.getDegrees() - d2.getDegrees(), 2),
                 Utilities.round((d1.getMinutes() - d2.getMinutes()), 2));
     }

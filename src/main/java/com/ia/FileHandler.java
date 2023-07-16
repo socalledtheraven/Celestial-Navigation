@@ -5,6 +5,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -12,10 +13,11 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class FileHandler {
-//    private static LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-    // IMPORTANT: switch back to real time from 2016
-    private static LocalDateTime now = LocalDateTime.of(2016, 9, 22, 1, 20, 15);
+    private static LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+    // separate now for testing w/ 2016 almanac
+//    private static LocalDateTime now = LocalDateTime.of(2016, 9, 22, 1, 20, 15);
     public static void savePlot(Plot p, String path) {
+        // saves a plot to a file using a special notation
         ArrayList<String> lines = new ArrayList<>();
         lines.add("a:" + p.getAValue().toString() + ",");
         lines.add("az:" + p.getAzimuth() + ",");
@@ -26,6 +28,7 @@ public class FileHandler {
     }
 
     public static Plot loadPlot(String path) {
+        // inverse of the above
         ArrayList<String> lines = wholeFileRead(path);
         String a = lines.get(0).split(":")[1].replace(",", "").strip();
         AValue aVal = new AValue(a);
@@ -39,6 +42,7 @@ public class FileHandler {
     }
 
     private static ArrayList<String> wholeFileRead(String path) {
+        // reads the whole thing (line by line obv) with a trycatch and RandomAccessFile
         try (RandomAccessFile rf = new RandomAccessFile(path, "rws")) {
             ArrayList<String> lines = new ArrayList<>();
             String line = rf.readLine();
@@ -51,12 +55,15 @@ public class FileHandler {
             }
             return lines;
         } catch (IOException e) {
+            // TODO: add real error handling
             System.out.println(e);
         }
         return null;
     }
 
     private static void appendToFile(String filename, String text) {
+        // APPENDS text to a file
+        // TODO: add real error handling
         try (PrintWriter pr = new PrintWriter(new FileWriter(filename, true))) {
             pr.println(text);
         }
@@ -66,31 +73,40 @@ public class FileHandler {
     }
 
     public static Degree getDeclination(String name) {
+        // public getter for the star details specifically declination
         return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0][1]);
     }
 
     public static Degree getSHA(String name) {
+        // public getter for the star details specifically SHA
         return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0][0]);
     }
 
     private static String almanacPageText(int page) {
-        try (PDDocument document = PDDocument.load(new File("src/main/resources/data/2016_Nautical_Almanac.pdf"))) {
+        // uses pdfbox to scrape text from the almanac pdfs. much less hassle than reading them myself
+        try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {
             PDFTextStripper stripper = new PDFTextStripper();
             stripper.setStartPage(page); // Start extracting text from the current page
             stripper.setEndPage(page); // Extract text only from the current page
             return stripper.getText(document);
         } catch (Exception e) {
-            // note: do some proper error handling after testing this ie invalid page numbers due to invalid dates etc
+            // TODO: do some proper error handling after testing this ie invalid page numbers due to invalid dates etc
             e.printStackTrace();
         }
         return null;
     }
 
     private static String[][] starDetails(String star, String pageText) {
+        // gets the first part of the table (which is 16 characters after the word Stars)
         String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
+        // the table ends 20 characters before pass
         extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
+
+        // probably not the best way to handle this but I can't really detect official pdf tables
+
         try (Scanner scanner = new Scanner(extractedText)) {
             String[] parts = new String[2];
+            // total of 57 commonly sighted stars, plus Polaris for the northern hemisphere and Alkaid for the southern
             String[] stars = new String[59];
             int counter = 0;
             while (scanner.hasNextLine()) {
@@ -105,54 +121,77 @@ public class FileHandler {
             }
             return new String[][]{parts, stars};
         } catch (Exception e) {
+            // TODO: again, error handling
             e.printStackTrace();
         }
         return null;
     }
 
     private static Double[][] altitudeCorrectionArrs(String[] pageTexts) {
+        // there are a lot of altitude corrections
         Double[] apparentAltitudes = new Double[163];
         Double[] corrections = new Double[163];
 
         String pageText = pageTexts[0];
+        // finding the start of the table
         String extractedText = pageText.substring(pageText.indexOf("0 00"));
+        // reformatting the +- symbols to reduce whitespace inconsistency
         extractedText = extractedText.substring(0, extractedText.indexOf("For")-1).replace("‒ ", "-").replace("+  ",
                 "+").replace("+ ", "+");
+
         try (Scanner scanner = new Scanner(extractedText)) {
             int counter = 0;
-            while (scanner.hasNextLine() && counter != extractedText.split("\n").length - 1) {
+            // the last lines are duplicates so I skip them
+            while (scanner.hasNextLine() && counter != (extractedText.split("\n").length - 1)) {
                 String line = scanner.nextLine();
+
+                // convert to char[] to do direct char manipulation
                 char[] temp = line.toCharArray();
                 temp[1] = '.';
                 String[] ls = line.split(" ");
-                if (!line.contains("-")) {
+
+                if (line.contains("-")) {
+                    // if the line is a negative one, it has some extra characters
+                    temp[36 - (5-ls[2].length()) - (5-ls[4].length())] = '.';
+                } else {
                     // putting a decimal place in at an _almost_ fixed point
                     temp[31 - (4-ls[2].length()) - (4-ls[4].length())] = '.';
-                } else {
-                    temp[36 - (5-ls[2].length()) - (5-ls[4].length())] = '.';
                 }
 
                 line = new String(temp);
                 String[] parts = line.split(" ");
+
+                // each line includes the appararent altitudes for the much later one as well
                 apparentAltitudes[counter] = Double.parseDouble(parts[0]);
                 apparentAltitudes[54+counter] = Double.parseDouble(parts[6]);
+
+                // same with corrections
                 corrections[counter] = Double.parseDouble(parts[5]);
                 corrections[54+counter] = Double.parseDouble(parts[11]);
+
                 counter++;
             }
         } catch (Exception e) {
+            // TODO: error handling
             e.printStackTrace();
         }
 
         pageText = pageTexts[1];
+
+        // the _other_ altitude correction table (completely different, ofc)
         extractedText = pageText.substring(pageText.indexOf("meters ' feet meters '")+24);
         extractedText = extractedText.substring(0, extractedText.indexOf("App. Alt.")-1).replace("‒ ", "-");
+
         try (Scanner scanner = new Scanner(extractedText)) {
             int counter = 0;
             String nextLine = "";
             String line;
+
             while (scanner.hasNextLine()) {
-                if (Objects.equals(nextLine, "")) {
+                // this whole section (and the next if statement) is for the stupid asf sections where occasionally 2
+                // parts are on one line for no reason and I have to allow for that even though I'm doing
+                // autoindexing >:(
+                if (nextLine.equals("")) {
                     line =
                             scanner.nextLine().strip().replace("'", "").replace("←", "").replace(" See table", "").replace(" meters", "").replace("         ", " ").replace("       ", " ").replace("  ", " ");
                 } else {
@@ -166,6 +205,7 @@ public class FileHandler {
                     nextLine = lines[1];
                 }
 
+                // every other line has corrections vs apparent altitudes
                 if (counter % 2 == 0) {
                     line = replaceIfOdd(line);
                     apparentAltitudes[108+(counter/2)] = Double.parseDouble(line.split(" ")[2]);
@@ -176,6 +216,7 @@ public class FileHandler {
                 counter++;
             }
         } catch (Exception e) {
+            // TODO: error handling you get the picture
             e.printStackTrace();
         }
 
@@ -183,8 +224,12 @@ public class FileHandler {
     }
 
     public static Degree altitudeCorrection(Degree apparentAltitude) {
-        Double[] apparentAltitudes = altitudeCorrectionArrs(new String[]{almanacPageText(280), almanacPageText(279)})[0];
-        Double[] corrections = altitudeCorrectionArrs(new String[]{almanacPageText(280), almanacPageText(279)})[1];
+        // finds the correction for the given apparent altitude
+        // the pages are hardcoded for the modern almanac
+        Double[] apparentAltitudes = altitudeCorrectionArrs(new String[]{almanacPageText(281), almanacPageText(282)})[0];
+        Double[] corrections = altitudeCorrectionArrs(new String[]{almanacPageText(281), almanacPageText(282)})[1];
+
+        // finds the correction in between the values bc that's how it works for some reason
         for (int i = 1; i < apparentAltitudes.length; i++) {
             if ((apparentAltitude.toDouble() > apparentAltitudes[i-1]) && (apparentAltitude.toDouble() < apparentAltitudes[i])) {
                 return new Degree(0, corrections[i-1]);
@@ -194,6 +239,7 @@ public class FileHandler {
     }
 
     private static String ariesCorr(String pageText) {
+        // choosing the right table for the minute
         String extractedText = pageText.split("d corr")[(now.getMinute() % 3)+1].strip();
 
         String line = extractedText.split("\n")[now.getSecond()];
@@ -203,6 +249,7 @@ public class FileHandler {
     }
 
     private static String replaceIfOdd(String stringToChange) {
+        // a function that adds a decimal point in certain places where it's needed
         final String separator = "#######";
         String splittingString = stringToChange.replaceAll(" ", separator + " ");
         String[] splitArray = splittingString.split(separator);
@@ -218,6 +265,7 @@ public class FileHandler {
 
     public static Degree getAriesGHA() {
         String pageText = almanacPageText(dateToPageNum());
+        // there's a weekday on the page which I'm using to identify the correct table
         String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
         String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
         String[] lines = extractedText.split("\\n");

@@ -1,6 +1,7 @@
 package com.ia;
 
 public class Plot {
+    // a final data class for handling file inputs/outputs and collecting the important info for a sight together
     private Latitude aLat;
     private Longitude aLon;
     private AValue a;
