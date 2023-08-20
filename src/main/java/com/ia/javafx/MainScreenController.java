@@ -50,10 +50,18 @@ public class MainScreenController {
 	}
 
 	public void addStarDisplay(String star) {
+		// use double int arr for each position, with all the magic numbers contained within
 		Label starLabel = new Label(star);
 		starLabel.setFont(new Font("System", 21));
 		starLabel.setStyle("-fx-border-color: black");
 
 		pane.getChildren().add(starLabel);
+
+		// here I added labels for the individual bits, font size 17 for the smaller ones
+
+		// use vertical and horizontal lines
+		// use label.getHeight + label.getPosition or whatever for fine positioning
+
+		// be sure to resize the smaller window popup
 	}
 }
