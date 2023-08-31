@@ -7,8 +7,11 @@ public class Star {
 
     public Star(String n) {
         declination = FileHandler.getDeclination(n);
-        System.out.println("GHA: " + FileHandler.getAriesGHA());
         greenwichHourAngle = Degree.add(FileHandler.getSHA(n), FileHandler.getAriesGHA());
+
+        if (greenwichHourAngle.toDouble() > 360) {
+            greenwichHourAngle = Degree.subtract(greenwichHourAngle, new Degree(360));
+        }
     }
 
     public Degree getGreenwichHourAngle() {

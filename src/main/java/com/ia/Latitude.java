@@ -2,7 +2,6 @@ package com.ia;
 
 public class Latitude extends Degree {
     // a Degree instance but with a direction - E or W
-    // TODO: actually make the direction matter
     private Direction direction;
     public Latitude(int degrees, double minutes) {
         super(degrees, minutes);
@@ -16,9 +15,9 @@ public class Latitude extends Degree {
         super(strDegrees);
     }
 
-    public Latitude(double doubDeg, Direction dir) {
-        super(doubDeg);
-        direction = dir;
+    public Latitude(int degrees, Direction d) {
+        super(degrees);
+        direction = d;
     }
 
     public int getDegrees() {
@@ -32,5 +31,9 @@ public class Latitude extends Degree {
     @Override
     public double toDouble() {
         return super.toDouble();
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 }

@@ -29,13 +29,6 @@ public class Degree {
         // deals with standard degree symbols and the weird ones the almanac uses
         this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", ""));
         this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
-        // cool switch statement enum thing!
-//        switch (parts[2]) {
-//            case "N" -> this.direction = Direction.NORTH;
-//            case "E" -> this.direction = Direction.EAST;
-//            case "S" -> this.direction = Direction.SOUTH;
-//            case "W" -> this.direction = Direction.WEST;
-//        }
     }
 
     public Degree(double doubDeg) {

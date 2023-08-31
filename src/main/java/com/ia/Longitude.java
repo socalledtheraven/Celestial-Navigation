@@ -1,15 +1,14 @@
 package com.ia;
 
 public class Longitude extends Degree {
-    // a Degree instance but with a direction - E or W
-    // TODO: actually make the direction matter
     private Direction direction;
     public Longitude(int degrees, double minutes) {
         super(degrees, minutes);
     }
 
-    public Longitude(int degrees) {
-        super(degrees);
+    public Longitude(int degrees, double minutes, Direction direction) {
+        super(degrees, minutes);
+        this.direction = direction;
     }
 
     public Longitude(String strDegrees) {
@@ -27,5 +26,9 @@ public class Longitude extends Degree {
 
     public double getMinutes() {
         return super.getMinutes();
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 }

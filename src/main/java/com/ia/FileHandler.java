@@ -286,19 +286,22 @@ public class FileHandler {
         }
 
         // adding the degrees and minutes with correction
-        return Degree.add(hourlyDetails[now.getHour()+1],
-                new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
+        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
+
+        if (aries.toDouble() > 360) {
+            aries = Degree.subtract(aries, new Degree(360));
+        }
+
+        return aries;
     }
 
     public static int dateToPageNum() {
         // -1 for off-by-one, /3 bc 3 per page, x2 to skip the second page on each set
-        // IMPORTANT: reset page number offset for 2023 almanac
-        return ((now.getDayOfYear()-1)/3)*2 + 14;
+        return ((now.getDayOfYear()-1)/3)*2 + 16;
     }
 
     public static int timeToPageNum() {
         // -1 for off-by-one, /3 bc 3 per page
-        // IMPORTANT: reset page number offset for 2023 almanac
-        return ((now.getMinute()-1)/3) + 258;
+        return ((now.getMinute()-1)/3) + 260;
     }
 }
