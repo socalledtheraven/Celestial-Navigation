@@ -37,4 +37,9 @@ public class Point {
 	public double getY() {
 		return cartesianY;
 	}
+
+	@Override
+	public String toString() {
+		return "(" + cartesianX + "," + cartesianY + ")";
+	}
 }

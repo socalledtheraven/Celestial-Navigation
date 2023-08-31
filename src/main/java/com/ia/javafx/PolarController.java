@@ -2,15 +2,20 @@ package com.ia.javafx;
 
 import com.ia.Degree;
 import com.ia.Latitude;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import static java.lang.Math.sqrt;
 
 public class PolarController {
+	private static final Logger logger = LogManager.getLogger();
 	@FXML
 	private Pane mainPane;
     @FXML
@@ -62,6 +67,7 @@ public class PolarController {
 		// finds the amount of the hypotenuse that the distance takes up and therefore how much the other sides need
 		// to shift by
 		double ratio = distance / sqrt(xDistance*xDistance + yDistance*yDistance);
+		logger.info("Proportion of distance vs azimuth line past the azimuth point: " + ratio);
 
 		return new Point(start.getX() + (xDistance * ratio), start.getY() + (yDistance * ratio));
 	}
@@ -95,6 +101,8 @@ public class PolarController {
 	}
 
 	protected double drawLongitudeLines(Latitude DRLatitude) {
+		// finds the correct x and then draws a line from the top line to the middle, and the modified line from
+		// middle to bottom
 		DRLatitude = new Latitude(Degree.subtract(new Degree(90), DRLatitude).getDegrees());
 		Point upperLinePoint = new Point(compassRose.getRadius(), DRLatitude);
 		Point lowerLinePoint = new Point(compassRose.getRadius(), Degree.add(DRLatitude,
@@ -112,7 +120,7 @@ public class PolarController {
 
 	protected double longitudeScale(double y) {
 		// the accounting for the fact that the earth is a sphere and longitudes aren't consistent across that
-		// circle radius is 90 but we need it to match with the 60 degrees compass rose circle
+		// circle radius is 90, but we need it to match with the 60 degrees compass rose circle
 		return (((double) 2 /3)*sqrt(8100 - 2*y*y)/60);
 	}
 }

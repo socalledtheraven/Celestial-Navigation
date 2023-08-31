@@ -36,6 +36,8 @@ public class MathematicalLine {
 	}
 
 	public static Point getIntercept(MathematicalLine line1, MathematicalLine line2, MathematicalLine line3) {
+		// yes, I know this only uses two for the intercept. this is because there's enough floating-point
+		// imperfections that the lines are unlikely to really intersect perfectly
 		double combinedIntercept = abs(line1.yIntercept - line2.yIntercept);
 		double combinedGradient = abs(line1.gradient - line2.gradient);
 		double x = combinedIntercept / combinedGradient;

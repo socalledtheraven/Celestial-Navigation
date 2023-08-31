@@ -3,19 +3,23 @@ package com.ia;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class FileHandler {
     private static LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
     // separate now for testing w/ 2016 almanac
 //    private static LocalDateTime now = LocalDateTime.of(2016, 9, 22, 1, 20, 15);
+    private static final Logger logger = LogManager.getLogger();
+
     public static void savePlot(Plot p, String path) {
         // saves a plot to a file using a special notation
         ArrayList<String> lines = new ArrayList<>();
@@ -25,6 +29,7 @@ public class FileHandler {
         for (String l : lines) {
             appendToFile(l, path);
         }
+        logger.info("Saved plot to " + path);
     }
 
     public static Plot loadPlot(String path) {
@@ -38,6 +43,7 @@ public class FileHandler {
         Latitude aLat = new Latitude(lat);
         String lon = lines.get(2).split("=")[1].split(",")[1].replace(",", "").split(":")[1];
         Longitude aLon = new Longitude(lon);
+        logger.info("Loaded plot from " + path);
         return new Plot(aLat, aLon, aVal, azimuth);
     }
 
@@ -55,8 +61,7 @@ public class FileHandler {
             }
             return lines;
         } catch (IOException e) {
-            // TODO: add real error handling
-            System.out.println(e);
+            logger.error("Error in wholeFileRead: " + e.getMessage());
         }
         return null;
     }
@@ -68,7 +73,7 @@ public class FileHandler {
             pr.println(text);
         }
         catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error in wholeFileRead: " + e.getMessage());
         }
     }
 
@@ -91,7 +96,8 @@ public class FileHandler {
             return stripper.getText(document);
         } catch (Exception e) {
             // TODO: do some proper error handling after testing this ie invalid page numbers due to invalid dates etc
-            e.printStackTrace();
+            logger.error("Error in almanacPageText: " + e.getMessage());
+            System.out.println("Sorry, the date is invalid. Please try again.");
         }
         return null;
     }
@@ -122,7 +128,8 @@ public class FileHandler {
             return new String[][]{parts, stars};
         } catch (Exception e) {
             // TODO: again, error handling
-            e.printStackTrace();
+            logger.error("Error in starDetails: " + e.getMessage());
+            System.out.println("Getting star details failed. Please try again.");
         }
         return null;
     }
@@ -172,8 +179,7 @@ public class FileHandler {
                 counter++;
             }
         } catch (Exception e) {
-            // TODO: error handling
-            e.printStackTrace();
+            logger.error("Error in the first page of altitude correction: " + e.getMessage());
         }
 
         pageText = pageTexts[1];
@@ -216,8 +222,7 @@ public class FileHandler {
                 counter++;
             }
         } catch (Exception e) {
-            // TODO: error handling you get the picture
-            e.printStackTrace();
+            logger.error("Error in the second page of altitude correction: " + e.getMessage());
         }
 
         return new Double[][]{apparentAltitudes, corrections};
@@ -235,6 +240,7 @@ public class FileHandler {
                 return new Degree(0, corrections[i-1]);
             }
         }
+        logger.warn("No correction found for " + apparentAltitude);
         return null;
     }
 
@@ -279,6 +285,7 @@ public class FileHandler {
             }
         }
 
+        // adding the degrees and minutes with correction
         return Degree.add(hourlyDetails[now.getHour()+1],
                 new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
     }

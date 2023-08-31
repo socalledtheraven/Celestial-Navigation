@@ -10,6 +10,7 @@ module com.ia.javafx {
 	requires org.jfree.chart.fx;
 	requires org.jfree.jfreechart;
 	requires java.desktop;
+	requires org.apache.logging.log4j;
 
 	opens com.ia.javafx to javafx.fxml;
     exports com.ia.javafx;

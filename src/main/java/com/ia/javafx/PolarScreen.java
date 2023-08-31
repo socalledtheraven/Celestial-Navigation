@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -17,6 +19,7 @@ public class PolarScreen extends Application {
     static PolarController controller;
     private double LONRATIO;
     private double CIRCLERADIUS;
+	private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -41,6 +44,7 @@ public class PolarScreen extends Application {
         controller = (PolarController) fxmlLoader.getController();
 
 		// declarations bunched up bc for loops are annoying
+	    // TODO: make window size configurable
         CIRCLERADIUS = controller.compassRoseRadius();
 	    double[] lonPoint = new double[3];
 	    Point[] aLon = new Point[3];
@@ -56,13 +60,16 @@ public class PolarScreen extends Application {
 		    lonPoint[i] = controller.drawLongitudeLines(new Latitude((int) DRLatitudes[i]));
 
 			// locates and draws the point of assumed longitude
+		    // divides by 60 bc degrees vs minutes, * by lonratio and circle radius to make sure it's the correct length
 		    aLon[i] = new Point(lonPoint[i]-((aLonDegrees[i]/60)*LONRATIO*CIRCLERADIUS),
 				    new Degree(90));
+			logger.info("Number " + i + " alon is " + aLon[i]);
 		    azimuthPoint[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]));
 		    azimuthLine[i] = controller.extendLine(new Line(azimuthPoint[i].getX(), azimuthPoint[i].getY(), aLon[i].getX(), aLon[i].getY()));
 
 		    interceptPoint[i] = controller.getIntercept(azimuthLine[i], (aValues[i]/60)*LONRATIO*CIRCLERADIUS, aLon[i]);
-		    degreePoint[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]-270));
+			logger.info("Number " + i + " intercept is " + interceptPoint[i]);
+			degreePoint[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]-270));
 		    lineOfPosition[i] = controller.extendLine(new Line(degreePoint[i].getX(), degreePoint[i].getY(), interceptPoint[i].getX(),
 				    interceptPoint[i].getY()));
 		    lineOfPosition[i].setStroke(Color.RED);
@@ -77,6 +84,7 @@ public class PolarScreen extends Application {
 		Point intersectionPoint = MathematicalLine.getIntercept(new MathematicalLine(azimuthLine[0]),
 			    new MathematicalLine(azimuthLine[1]),
 				new MathematicalLine(azimuthLine[2]));
+		logger.info("Intersection point is " + intersectionPoint);
 
 		double finalLon = (60*(intersectionPoint.getX() - 320))/LONRATIO/CIRCLERADIUS;
 		double finalLat = (intersectionPoint.getY() - 240)*60/controller.compassRoseRadius();
