@@ -34,12 +34,12 @@ public class StarAddController {
 
 	public void getData() {
 		String star = starDropdown.getValue();
-		Degree angularHeight =
-				new Degree(angularHeightDegrees.getText() + " " + angularHeightMinutes.getText());
-		Degree indexCorrection = new Degree(Double.parseDouble(indexCorr.getText().replace("°", "")));
+		String angularHeight =
+				angularHeightDegrees.getText() + " " + angularHeightMinutes.getText();
+		String indexCorrection = indexCorr.getText().replace("°", "");
 		boolean indexCorrectionOn = indexCorrOn.isPressed();
 
-		main.addStarDisplay(star);
+		main.addStarDisplay(star, angularHeight, indexCorrection, indexCorrectionOn, 2);
 		Stage temp = (Stage) continueButton.getScene().getWindow();
 		temp.close();
 	}
