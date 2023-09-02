@@ -3,8 +3,6 @@ package com.ia.javafx;
 import com.ia.Degree;
 import com.ia.FileHandler;
 import com.ia.Plot;
-import com.ia.StarSight;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -65,10 +63,13 @@ public class MainScreenController {
 	}
 
 	@FXML
-	public Plot loadPlot() throws IOException {
+	public void loadPlot() throws IOException {
 		FileChooser fileChooser = new FileChooser();
 		File f = fileChooser.showOpenDialog(loadPlotButton.getScene().getWindow());
-		return FileHandler.loadPlot(f.getAbsolutePath());
+		Plot[] plots = FileHandler.loadPlot(f.getAbsolutePath());
+		for (int i = 0; i < 3; i++) {
+			// .
+		}
 	}
 
 	public void addStarDisplay(String star, String angularHeight, String indexCorrection, boolean indexCorrectionOn) {

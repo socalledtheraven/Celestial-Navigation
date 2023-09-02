@@ -3,7 +3,6 @@ package com.ia;
 public class Degree {
     private int degrees;
     private double minutes;
-    private Direction direction;
 
     public Degree(int degrees, double minutes) {
         // error handling for minute overflow
@@ -31,10 +30,10 @@ public class Degree {
         this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
     }
 
-    public Degree(double doubDeg) {
+    public Degree(double doubleDegree) {
         // takes whole numbers for degrees and decimal parts for minutes
-        this.degrees = (int) Math.floor(doubDeg);
-        this.minutes = 100 * (Utilities.round(doubDeg - this.degrees, 2));
+        this.degrees = (int) Math.floor(doubleDegree);
+        this.minutes = 100 * (Utilities.round(doubleDegree - this.degrees, 2));
     }
 
     @Override
@@ -66,7 +65,7 @@ public class Degree {
                 Utilities.round((d1.getMinutes() - d2.getMinutes()), 2));
     }
 
-    public static Degree divide(Degree d1, int denom) {
-        return new Degree(d1.getDegrees() / denom, d1.getMinutes() / denom);
+    public static Degree divide(Degree d1, int denominator) {
+        return new Degree(d1.getDegrees() / denominator, d1.getMinutes() / denominator);
     }
 }
