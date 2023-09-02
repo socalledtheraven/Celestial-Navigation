@@ -17,18 +17,18 @@
          </font>
       </Label>
       <ChoiceBox fx:id="starDropdown" layoutX="182.0" layoutY="110.0" prefWidth="150.0" style="-fx-border-color: black;" />
-      <TextField fx:id="angularHeightDegrees" alignment="CENTER_RIGHT" layoutX="243.0" layoutY="152.0" prefHeight="27.0" prefWidth="120.0" style="-fx-border-color: black;" text="°" />
+      <TextField fx:id="angularHeightDegrees" alignment="CENTER_RIGHT" layoutX="243.0" layoutY="152.0" prefHeight="27.0" prefWidth="120.0" promptText="°" style="-fx-border-color: black;" />
       <Label alignment="CENTER_RIGHT" layoutX="119.0" layoutY="152.0" prefHeight="27.0" prefWidth="120.0" style="-fx-border-width: 1; -fx-border-color: black;" text="Angular Height: " />
-      <TextField fx:id="angularHeightMinutes" alignment="CENTER_RIGHT" layoutX="362.0" layoutY="152.0" prefHeight="25.0" prefWidth="70.0" style="-fx-border-color: black;" text="'" />
+      <TextField fx:id="angularHeightMinutes" alignment="CENTER_RIGHT" layoutX="362.0" layoutY="152.0" prefHeight="25.0" prefWidth="70.0" promptText="'" style="-fx-border-color: black;" />
       <Label alignment="CENTER_RIGHT" layoutX="119.0" layoutY="187.0" prefHeight="27.0" prefWidth="120.0" style="-fx-border-width: 1; -fx-border-color: black;" text="Index Correction: " />
-      <TextField fx:id="indexCorr" alignment="CENTER_RIGHT" layoutX="243.0" layoutY="187.0" prefHeight="7.0" prefWidth="120.0" style="-fx-border-color: black;" text="°" />
+      <TextField fx:id="indexCorr" alignment="CENTER_RIGHT" layoutX="243.0" layoutY="187.0" prefHeight="7.0" prefWidth="120.0" promptText="°" style="-fx-border-color: black;" />
       <Label alignment="CENTER_RIGHT" layoutX="131.0" layoutY="241.0" prefHeight="19.0" prefWidth="121.0" text="Index Correction: " />
       <RadioButton fx:id="indexCorrOff" layoutX="259.0" layoutY="253.0" mnemonicParsing="false" text="Off">
          <toggleGroup>
             <ToggleGroup fx:id="indexCorrectionButtons" />
          </toggleGroup></RadioButton>
       <RadioButton fx:id="indexCorrOn" layoutX="259.0" layoutY="227.0" mnemonicParsing="false" text="On" toggleGroup="$indexCorrectionButtons" />
-      <Button fx:id="continueButton" alignment="CENTER" layoutX="209.0" layoutY="305.0" mnemonicParsing="false" onAction="#getData" prefHeight="46.0" prefWidth="114.0" style="-fx-background-radius: 8;" text="Add">
+      <Button fx:id="continueButton" alignment="CENTER" layoutX="209.0" layoutY="305.0" mnemonicParsing="false" onAction="#getData" prefHeight="46.0" prefWidth="114.0" style="-fx-background-radius: 11;" text="Add">
          <font>
             <Font size="22.0" />
          </font>

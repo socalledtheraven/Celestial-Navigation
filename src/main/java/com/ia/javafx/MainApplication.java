@@ -25,7 +25,9 @@ public class MainApplication extends Application {
         stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
         stage.show();
 
-        controller.addStarDisplay("Alpheratz", "20.2", "1", true, 3);
+//        controller.addStarDisplay("Alpheratz", "20.2", "1.0", true);
+//        controller.addStarDisplay("Bellatrix", "32.6", "0.0", false);
+//        controller.addStarDisplay("Capella", "46.4", "1.1", true);
     }
 
     public static void main(String[] args) {

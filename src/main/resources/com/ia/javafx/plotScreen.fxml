@@ -25,17 +25,17 @@
       <font>
          <Font size="14.0" />
       </font></Label>
-   <Button alignment="CENTER" layoutX="506.0" layoutY="386.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 8;" text="Load Fix">
+   <Button alignment="CENTER" layoutX="506.0" layoutY="386.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Load Fix">
       <font>
          <Font size="18.0" />
       </font>
    </Button>
-   <Button alignment="CENTER" layoutX="506.0" layoutY="339.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 8;" text="Save Fix">
+   <Button alignment="CENTER" layoutX="506.0" layoutY="339.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Save Fix">
       <font>
          <Font size="18.0" />
       </font>
    </Button>
-   <Button alignment="CENTER" layoutX="506.0" layoutY="56.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 8;" text="Values">
+   <Button alignment="CENTER" layoutX="506.0" layoutY="56.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Values">
       <font>
          <Font size="18.0" />
       </font>
