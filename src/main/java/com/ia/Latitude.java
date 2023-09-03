@@ -7,6 +7,11 @@ public class Latitude extends Degree {
         super(degrees, minutes);
     }
 
+    public Latitude(int degrees, double minutes, Direction d) {
+        super(degrees, minutes);
+        direction = d;
+    }
+
     public Latitude(int degrees) {
         super(degrees);
     }

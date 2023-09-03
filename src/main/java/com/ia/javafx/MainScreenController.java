@@ -1,8 +1,6 @@
 package com.ia.javafx;
 
-import com.ia.Degree;
-import com.ia.FileHandler;
-import com.ia.Plot;
+import com.ia.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,8 +25,12 @@ public class MainScreenController {
 	private Button loadPlotButton;
 	@FXML
 	private Pane pane;
-	private int stars = 0;
+	private int starsNum = 0;
 	private Line firstVertical;
+	private String[] stars;
+	private Degree[] angularHeights;
+	private Degree[] indexCorrections;
+	private boolean[] indexCorrectionOnValues;
 
 	@FXML
 	public void addStar() throws IOException {
@@ -51,6 +53,7 @@ public class MainScreenController {
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("determinedPositionInputScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		DPosController controller = (DPosController) fxmlLoader.getController();
+		controller.loadHemispheres();
 		controller.setMain(this);
 
 		Stage stage = new Stage();
@@ -62,14 +65,29 @@ public class MainScreenController {
 		stage.show();
 	}
 
+	public void switchToFinalDisplay(int numStars, AValue[] aValues, Degree[] azimuths,
+	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
+		Parent root = fxmlLoader.load();
+		FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
+
+		Stage stage = new Stage();
+		stage.setScene(new Scene(root));
+		stage.setTitle("Star Data Display");
+		stage.setWidth(550);
+		stage.setHeight(470);
+		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		pane.getScene().getWindow().hide();
+		controller.addStarDisplay(numStars, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
+		stage.show();
+	}
+
 	@FXML
 	public void loadPlot() throws IOException {
 		FileChooser fileChooser = new FileChooser();
 		File f = fileChooser.showOpenDialog(loadPlotButton.getScene().getWindow());
 		Plot[] plots = FileHandler.loadPlot(f.getAbsolutePath());
-		for (int i = 0; i < 3; i++) {
-			// .
-		}
+
 	}
 
 	public void addStarDisplay(String star, String angularHeight, String indexCorrection, boolean indexCorrectionOn) {
@@ -77,80 +95,84 @@ public class MainScreenController {
 		int[][] xPositions = {{20, 40, 30, 14}, {20, 40, 30, 14}, {200, 220, 210, -1}};
 		int[][] yPositions = {{20, 70, 110, 150, 200}, {200, 250, 290, 330, 380}, {100, 150, 190, 230, -1}};
 
+		stars[starsNum] = star;
 		Label starLabel = new Label(star);
 		starLabel.setFont(new Font("System", 26));
 		starLabel.setStyle("-fx-border-color: black");
-		starLabel.setLayoutX(xPositions[stars][0]);
-		starLabel.setLayoutY(yPositions[stars][0]);
+		starLabel.setLayoutX(xPositions[starsNum][0]);
+		starLabel.setLayoutY(yPositions[starsNum][0]);
 
 		pane.getChildren().add(starLabel);
 
+		angularHeights[starsNum] = new Degree(angularHeight);
 		Label angularHeightLabel = new Label(angularHeight);
 		angularHeightLabel.setFont(new Font("System", 21));
 		angularHeightLabel.setStyle("-fx-border-color: black");
-		angularHeightLabel.setLayoutX(xPositions[stars][1]);
-		angularHeightLabel.setLayoutY(yPositions[stars][1]);
+		angularHeightLabel.setLayoutX(xPositions[starsNum][1]);
+		angularHeightLabel.setLayoutY(yPositions[starsNum][1]);
 
 		pane.getChildren().add(angularHeightLabel);
 
+		indexCorrections[starsNum] = new Degree(indexCorrection);
 		Label indexCorrectionLabel = new Label(indexCorrection);
 		indexCorrectionLabel.setFont(new Font("System", 21));
 		indexCorrectionLabel.setStyle("-fx-border-color: black");
-		indexCorrectionLabel.setLayoutX(xPositions[stars][1]);
-		indexCorrectionLabel.setLayoutY(yPositions[stars][2]);
+		indexCorrectionLabel.setLayoutX(xPositions[starsNum][1]);
+		indexCorrectionLabel.setLayoutY(yPositions[starsNum][2]);
 
 		pane.getChildren().add(indexCorrectionLabel);
 
+		indexCorrectionOnValues[starsNum] = indexCorrectionOn;
 		Label indexCorrectionOnLabel = new Label(indexCorrectionOn ? "On" : "Off");
 		indexCorrectionOnLabel.setFont(new Font("System", 21));
 		indexCorrectionOnLabel.setStyle("-fx-border-color: black");
-		indexCorrectionOnLabel.setLayoutX(xPositions[stars][1]);
-		indexCorrectionOnLabel.setLayoutY(yPositions[stars][3]);
+		indexCorrectionOnLabel.setLayoutX(xPositions[starsNum][1]);
+		indexCorrectionOnLabel.setLayoutY(yPositions[starsNum][3]);
 
 		pane.getChildren().add(indexCorrectionOnLabel);
 
 		// use vertical and horizontal lines
 
-		if (stars == 0) {
-			firstVertical = new Line(xPositions[stars][2], starLabel.getLayoutY()+40, xPositions[stars][2],
+		if (starsNum == 0) {
+			firstVertical = new Line(xPositions[starsNum][2], starLabel.getLayoutY()+40, xPositions[starsNum][2],
 					indexCorrectionOnLabel.getLayoutY()+14);
 			pane.getChildren().add(firstVertical);
 		} else {
-			Line mainVerticalLine = new Line(xPositions[stars][2], starLabel.getLayoutY()+40, xPositions[stars][2],
+			Line mainVerticalLine = new Line(xPositions[starsNum][2], starLabel.getLayoutY()+40, xPositions[starsNum][2],
 					indexCorrectionOnLabel.getLayoutY()+14);
 			pane.getChildren().add(mainVerticalLine);
 
-			if (stars == 1) {
+			if (starsNum == 1) {
 				firstVertical.setEndY(starLabel.getLayoutY());
 			}
 		}
 
-		Line smallHorizontalLine1 = new Line(xPositions[stars][2], angularHeightLabel.getLayoutY()+14,
+		Line smallHorizontalLine1 = new Line(xPositions[starsNum][2], angularHeightLabel.getLayoutY()+14,
 				angularHeightLabel.getLayoutX(), angularHeightLabel.getLayoutY()+14);
 		pane.getChildren().add(smallHorizontalLine1);
 
-		Line smallHorizontalLine2 = new Line(xPositions[stars][2], indexCorrectionLabel.getLayoutY()+14,
+		Line smallHorizontalLine2 = new Line(xPositions[starsNum][2], indexCorrectionLabel.getLayoutY()+14,
 				indexCorrectionLabel.getLayoutX(), indexCorrectionLabel.getLayoutY()+14);
 		pane.getChildren().add(smallHorizontalLine2);
 
-		Line smallHorizontalLine3 = new Line(xPositions[stars][2], indexCorrectionOnLabel.getLayoutY()+14,
+		Line smallHorizontalLine3 = new Line(xPositions[starsNum][2], indexCorrectionOnLabel.getLayoutY()+14,
 				indexCorrectionOnLabel.getLayoutX(), indexCorrectionOnLabel.getLayoutY()+14);
 		pane.getChildren().add(smallHorizontalLine3);
 
 		// be sure to resize the smaller window popup
-		if (stars != 0) {
+		if (starsNum != 0) {
 			Button continueButton = getButton(yPositions);
 			pane.getChildren().add(continueButton);
 		}
 
-		if (stars == 2) {
+		if (starsNum == 2) {
 			pane.getChildren().remove(addStarButton);
 		} else {
-			addStarButton.setLayoutX(xPositions[stars][3]);
-			addStarButton.setLayoutY(yPositions[stars][4]);
+			addStarButton.setLayoutX(xPositions[starsNum][3]);
+			addStarButton.setLayoutY(yPositions[starsNum][4]);
 		}
 
-		stars++;
+		starsNum++;
 	}
 
 	private Button getButton(int[][] yPositions) {
@@ -175,8 +197,28 @@ public class MainScreenController {
 		return continueButton;
 	}
 
+	public void finalCalculation(Latitude latitude, Longitude longitude, double eyeHeight) throws IOException {
+		AValue[] aValues = new AValue[3];
+		Degree[] azimuths = new Degree[3];
+		Latitude[] assumedLatitudes = new Latitude[3];
+		Longitude[] assumedLongitudes = new Longitude[3];
+		for (int i = 0; i < starsNum; i++) {
+			Star star = new Star(stars[i]);
+			DRPosition dr = new DRPosition(latitude, longitude);
+			AssumedPosition ap = new AssumedPosition(dr, star);
+			assumedLatitudes[i] = ap.getAssumedLatitude();
+			assumedLongitudes[i] = ap.getAssumedLongitude();
 
-	public void finalCalculation(Degree latitude, Degree longitude) {
-		// .
+			StarSight st = new StarSight(angularHeights[i], indexCorrections[i], indexCorrectionOnValues[i], eyeHeight);
+			Degree Ho = st.getObservedHeight();
+			double Hc = ap.getExpectedHeight();
+			AValue a = new AValue(Hc, Ho);
+			Degree az = ap.getAzimuth();
+
+			aValues[i] = a;
+			azimuths[i] = az;
+		}
+
+		switchToFinalDisplay(starsNum, aValues, azimuths, assumedLatitudes, assumedLongitudes);
 	}
 }

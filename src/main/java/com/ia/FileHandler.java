@@ -105,7 +105,7 @@ public class FileHandler {
 
     private static String almanacPageText(int page) {
         // uses pdfbox to scrape text from the almanac pdfs. much less hassle than reading them myself
-        try (PDDocument document = PDDocument.load(new File("src/main/resources/data/almanac.pdf"))) {
+        try (PDDocument document = PDDocument.load(new File(FileHandler.class.getResource("almanac.pdf").toURI()))) {
             PDFTextStripper stripper = new PDFTextStripper();
             stripper.setStartPage(page); // Start extracting text from the current page
             stripper.setEndPage(page); // Extract text only from the current page

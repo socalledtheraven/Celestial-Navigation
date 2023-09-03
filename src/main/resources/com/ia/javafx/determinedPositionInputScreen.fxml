@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
@@ -8,32 +9,32 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ia.javafx.DPosController">
    <children>
-      <Label layoutX="164.0" layoutY="116.0" text="DR Position">
+      <Label layoutX="164.0" layoutY="94.0" text="DR Position">
          <font>
             <Font size="42.0" />
          </font>
       </Label>
-      <TextField fx:id="longitudeDegrees" alignment="CENTER_RIGHT" layoutX="212.0" layoutY="233.0" promptText="°">
+      <TextField fx:id="longitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="211.0" promptText="°">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="77.0" layoutY="205.0" prefHeight="20.0" prefWidth="130.0" text="Dead Reckoning Lat:">
+      <Label alignment="CENTER_RIGHT" layoutX="58.0" layoutY="183.0" prefHeight="20.0" prefWidth="130.0" text="Dead Reckoning Lat:">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="longitudeMinutes" alignment="CENTER_RIGHT" layoutX="385.0" layoutY="233.0" prefHeight="25.0" prefWidth="70.0" promptText="'">
+      <TextField fx:id="longitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="211.0" prefHeight="25.0" prefWidth="70.0" promptText="'">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="70.0" layoutY="238.0" prefHeight="20.0" prefWidth="137.0" text="Dead Reckoning Lon:">
+      <Label alignment="CENTER_RIGHT" layoutX="51.0" layoutY="216.0" prefHeight="20.0" prefWidth="137.0" text="Dead Reckoning Lon:">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="latitudeDegrees" alignment="CENTER_RIGHT" layoutX="212.0" layoutY="200.0" promptText="°">
+      <TextField fx:id="latitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="178.0" promptText="°">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <TextField fx:id="latitudeMinutes" alignment="CENTER_RIGHT" layoutX="385.0" layoutY="200.0" prefHeight="25.0" prefWidth="70.0" promptText="'">
+      <TextField fx:id="latitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="178.0" prefHeight="25.0" prefWidth="70.0" promptText="'">
          <font>
             <Font size="14.0" />
          </font></TextField>
@@ -42,5 +43,17 @@
             <Font size="22.0" />
          </font>
       </Button>
+      <TextField fx:id="eyeHeightBox" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="247.0" prefHeight="29.0" prefWidth="94.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextField>
+      <Label alignment="CENTER_RIGHT" layoutX="123.0" layoutY="252.0" prefHeight="20.0" prefWidth="137.0" text="Eye Height:">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="latitudeHemisphereBox" layoutX="436.0" layoutY="178.0" prefHeight="29.0" prefWidth="63.0" />
+      <ChoiceBox fx:id="longitudeHemisphereBox" layoutX="436.0" layoutY="211.0" prefHeight="29.0" prefWidth="63.0" />
    </children>
 </Pane>

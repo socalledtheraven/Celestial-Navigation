@@ -19,15 +19,11 @@ public class MainApplication extends Application {
 
 		// renders the actual screen
 	    stage.setScene(new Scene(root));
-        stage.setTitle("IA ");
+        stage.setTitle("IA");
         stage.setWidth(550);
         stage.setHeight(470);
         stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
         stage.show();
-
-//        controller.addStarDisplay("Alpheratz", "20.2", "1.0", true);
-//        controller.addStarDisplay("Bellatrix", "32.6", "0.0", false);
-//        controller.addStarDisplay("Capella", "46.4", "1.1", true);
     }
 
     public static void main(String[] args) {

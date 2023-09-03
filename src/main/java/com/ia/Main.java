@@ -38,7 +38,7 @@ public class Main {
         System.out.println("What hemisphere are you in? ");
         Direction hemisphere = Direction.valueOf(s.nextLine());
 
-        StarSight st = new StarSight(angHeight, ic, icon, eyeheight, hemisphere);
+        StarSight st = new StarSight(angHeight, ic, icon, eyeheight);
         Degree Ho = st.getObservedHeight();
         double Hc = ap.getExpectedHeight();
         AValue a = new AValue(Hc, Ho);
