@@ -75,7 +75,8 @@ public class MainScreenController {
 		stage.setScene(new Scene(root));
 		stage.setTitle("Star Data Display");
 		stage.setWidth(550);
-		stage.setHeight(470);
+		stage.setHeight(450);
+		stars = new String[]{"Cassiopeia", "Betelgeuse", "Polaris"};
 		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
 		pane.getScene().getWindow().hide();
 		controller.addStarDisplay(numStars, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
