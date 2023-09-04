@@ -2,17 +2,22 @@ package com.ia.javafx;
 
 import com.ia.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Math.ceil;
@@ -31,6 +36,7 @@ public class FinalFixDisplayController {
 	private Degree[] az;
 	private Latitude[] alat;
 	private Longitude[] alon;
+	private Latitude drlat;
 
 
 	public void loadFixes() {
@@ -53,7 +59,7 @@ public class FinalFixDisplayController {
 		}
 
 		removeStarDisplay();
-		addStarDisplay(fixes.size(), s, a, az, alat, alon);
+		addStarDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
 	}
 
 	public void saveFixes() {
@@ -76,15 +82,13 @@ public class FinalFixDisplayController {
 	}
 
 	private void removeStarDisplay() {
-		int l = pane.getChildren().size();
-		for (int i = 3; i < l; i++) {
-			pane.getChildren().remove(3);
-		}
+		pane.getChildren().subList(3, pane.getChildren().size()).clear();
 	}
 
 	public void addStarDisplay(int numStars, String[] stars, AValue[] aValues, Degree[] azimuths,
-	                           Latitude[] assumedLatitudes, Longitude[] assumedLongitudes) {
+	                           Latitude[] assumedLatitudes, Longitude[] assumedLongitudes, Latitude DRLatitude) {
 		// use double int arr for each position, with all the magic numbers contained within
+		drlat = DRLatitude;
 		int[][] xPositions;
 		int[][] yPositions;
 
@@ -190,5 +194,32 @@ public class FinalFixDisplayController {
 				pane.getChildren().add(smallHorizontalLine5);
 			}
 		}
+	}
+
+	public void switchToPlotScreen() throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("plotScreen.fxml"));
+		Parent root = fxmlLoader.load();
+		PolarController controller = (PolarController) fxmlLoader.getController();
+		int numStars = s.length;
+		double[] azimuths = new double[numStars];
+		double[] aValues = new double[numStars];
+		double[] aLonDeg = new double[numStars];
+
+		for (int i = 0; i < numStars; i++) {
+			azimuths[i] = az[i].toDouble();
+			aValues[i] = a[i].toDouble();
+			aLonDeg[i] = alon[i].getDegrees();
+		}
+
+		controller.plot(numStars, drlat.toDouble(), azimuths, aValues, aLonDeg);
+
+		Stage stage = new Stage();
+		stage.setScene(new Scene(root));
+		stage.setTitle("Star Data Display");
+		stage.setWidth(550);
+		stage.setHeight(450);
+		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.show();
+		pane.getScene().getWindow().hide();
 	}
 }

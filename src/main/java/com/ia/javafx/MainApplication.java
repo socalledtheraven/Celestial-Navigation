@@ -36,7 +36,7 @@ public class MainApplication extends Application {
         Latitude[] latitudes = {new Latitude(3), new Latitude(3), new Latitude(3)};
         Longitude[] longitudes = {new Longitude(6, 0), new Longitude(4, 0), new Longitude(4, 0)};
 
-        controller.switchToFinalDisplay(3, stars, aValues, azimuths, latitudes, longitudes);
+//        controller.switchToFinalDisplay(3, stars, aValues, azimuths, latitudes, longitudes, new Latitude(-1));
 //        FileHandler.loadPlot("C:\\Users\\tomda\\Coding\\IA\\src\\main\\resources\\com\\ia\\data\\polaris.fix");
     }
 

@@ -6,6 +6,7 @@ import com.ia.Latitude;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
@@ -32,7 +33,11 @@ public class PolarController {
 	private Line bottomLine;
     @FXML
     private Circle compassRose;
+	private double CIRCLERADIUS = compassRose.getRadius();
+	private double LONRATIO;
+	public PolarController() {
 
+	}
     protected void setLabels(double longitude) {
 		// called at the start to make the labels correct
 		topLabel.setText((longitude+1) + "°");
@@ -43,10 +48,6 @@ public class PolarController {
     protected Point circleCentre() {
         return new Point(compassRose.getLayoutX(), compassRose.getLayoutY());
     }
-
-	protected double compassRoseRadius() {
-		return compassRose.getRadius();
-	}
 
 	protected Line extendLine(Line line) {
 		// extends a line both for display purposes and because default [Line]s are more vectors, so finding
@@ -122,5 +123,52 @@ public class PolarController {
 		// the accounting for the fact that the earth is a sphere and longitudes aren't consistent across that
 		// circle radius is 90, but we need it to match with the 60 degrees compass rose circle
 		return (((double) 2 /3)*sqrt(8100 - 2*y*y)/60);
+	}
+	
+	public void plot(int numOfStars, double DRLatitude, double[] azimuths, double[] aValues, double[] aLonDegrees) {
+		double[] lonPoints = new double[numOfStars];
+		Point[] assumedLongitudePoints = new Point[numOfStars];
+		Point[] azimuthPoints = new Point[numOfStars];
+		Line[] azimuthLines = new Line[numOfStars];
+		Point[] interceptPoints = new Point[numOfStars];
+		Point[] degreePoints = new Point[numOfStars];
+		Line[] linesOfPosition = new Line[numOfStars];
+
+		for (int i = 0; i < numOfStars; i++) {
+			LONRATIO = longitudeScale(DRLatitude);
+			setLabels(DRLatitude);
+			lonPoints[i] = drawLongitudeLines(new Latitude((int) DRLatitude));
+
+			// locates and draws the point of assumed longitude
+			// divides by 60 bc degrees vs minutes, * by lonratio and circle radius to make sure it's the correct length
+			assumedLongitudePoints[i] = new Point(lonPoints[i]-((aLonDegrees[i]/60)*LONRATIO*CIRCLERADIUS),
+					new Degree(90));
+			logger.info("Number " + i + " alon is " + assumedLongitudePoints[i]);
+			azimuthPoints[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]));
+			azimuthLines[i] = extendLine(new Line(azimuthPoints[i].getX(), azimuthPoints[i].getY(), assumedLongitudePoints[i].getX(), assumedLongitudePoints[i].getY()));
+
+			interceptPoints[i] = getIntercept(azimuthLines[i], (aValues[i]/60)*LONRATIO*CIRCLERADIUS, assumedLongitudePoints[i]);
+			logger.info("Number " + i + " intercept is " + interceptPoints[i]);
+			degreePoints[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]-270));
+			linesOfPosition[i] = extendLine(new Line(degreePoints[i].getX(), degreePoints[i].getY(), interceptPoints[i].getX(),
+					interceptPoints[i].getY()));
+			linesOfPosition[i].setStroke(Color.RED);
+			linesOfPosition[i].setStrokeWidth(2);
+		}
+
+		for (int i = 0; i < numOfStars; i++) {
+			addLine(azimuthLines[i]);
+			addLine(linesOfPosition[i]);
+		}
+
+		Point intersectionPoint = MathematicalLine.getIntercept(new MathematicalLine(azimuthLines[0]),
+				new MathematicalLine(azimuthLines[1]),
+				new MathematicalLine(azimuthLines[2]));
+		logger.info("Intersection point is " + intersectionPoint);
+
+		double finalLon = (60*(intersectionPoint.getX() - 320))/LONRATIO/CIRCLERADIUS;
+		double finalLat = (intersectionPoint.getY() - 240)*60/CIRCLERADIUS;
+
+		System.out.println("You are at " + finalLat + ", " + finalLon);
 	}
 }

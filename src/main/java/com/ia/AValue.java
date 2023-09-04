@@ -30,12 +30,18 @@ public class AValue {
         return towards;
     }
 
-    @Override
-    public String toString() {
-        return value.toDouble() + ";" + towards;
+    public double toDouble() {
+        return value.toDouble() * (towards==Towards.TOWARDS ? 1 : -1);
     }
 
     public String toFormattedString() {
         return value + " degrees " + towards.toString().toLowerCase();
     }
+
+    @Override
+    public String toString() {
+        return value.toDouble() + ";" + towards;
+    }
+
+
 }

@@ -28,7 +28,7 @@ public class MainScreenController {
 	private Pane pane;
 	private int starsNum = 0;
 	private Line firstVertical;
-	private String[] stars;
+	private String[] stars = new String[3];
 	private Degree[] angularHeights;
 	private Degree[] indexCorrections;
 	private boolean[] indexCorrectionOnValues;
@@ -67,7 +67,7 @@ public class MainScreenController {
 	}
 
 	public void switchToFinalDisplay(int numStars, String[] stars, AValue[] aValues, Degree[] azimuths,
-	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes) throws IOException {
+	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes, Latitude DRLatitude) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
@@ -81,7 +81,7 @@ public class MainScreenController {
 		stage.show();
 		pane.getScene().getWindow().hide();
 
-		controller.addStarDisplay(numStars, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
+		controller.addStarDisplay(numStars, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes, DRLatitude);
 	}
 
 	@FXML
@@ -103,7 +103,7 @@ public class MainScreenController {
 			alon[i] = fixes.get(i).getAssumedLongitude();
 		}
 
-		switchToFinalDisplay(fixes.size(), s, a, az, alat, alon);
+		switchToFinalDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
 	}
 
 	public void addStarDisplay(String star, String angularHeight, String indexCorrection, boolean indexCorrectionOn) {
@@ -235,6 +235,6 @@ public class MainScreenController {
 			azimuths[i] = az;
 		}
 
-		switchToFinalDisplay(starsNum, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
+		switchToFinalDisplay(starsNum, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes, latitude);
 	}
 }

@@ -45,51 +45,7 @@ public class PolarScreen extends Application {
 
 		// declarations bunched up bc for loops are annoying
 	    // TODO: make window size configurable
-        CIRCLERADIUS = controller.compassRoseRadius();
-	    double[] lonPoint = new double[3];
-	    Point[] aLon = new Point[3];
-	    Point[] azimuthPoint = new Point[3];
-	    Line[] azimuthLine = new Line[3];
-	    Point[] interceptPoint = new Point[3];
-	    Point[] degreePoint = new Point[3];
-	    Line[] lineOfPosition = new Line[3];
 
-	    for (int i = 0; i < numOfStars; i++) {
-		    LONRATIO = controller.longitudeScale(DRLatitudes[i]);
-		    controller.setLabels(DRLatitudes[i]);
-		    lonPoint[i] = controller.drawLongitudeLines(new Latitude((int) DRLatitudes[i]));
-
-			// locates and draws the point of assumed longitude
-		    // divides by 60 bc degrees vs minutes, * by lonratio and circle radius to make sure it's the correct length
-		    aLon[i] = new Point(lonPoint[i]-((aLonDegrees[i]/60)*LONRATIO*CIRCLERADIUS),
-				    new Degree(90));
-			logger.info("Number " + i + " alon is " + aLon[i]);
-		    azimuthPoint[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]));
-		    azimuthLine[i] = controller.extendLine(new Line(azimuthPoint[i].getX(), azimuthPoint[i].getY(), aLon[i].getX(), aLon[i].getY()));
-
-		    interceptPoint[i] = controller.getIntercept(azimuthLine[i], (aValues[i]/60)*LONRATIO*CIRCLERADIUS, aLon[i]);
-			logger.info("Number " + i + " intercept is " + interceptPoint[i]);
-			degreePoint[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]-270));
-		    lineOfPosition[i] = controller.extendLine(new Line(degreePoint[i].getX(), degreePoint[i].getY(), interceptPoint[i].getX(),
-				    interceptPoint[i].getY()));
-		    lineOfPosition[i].setStroke(Color.RED);
-		    lineOfPosition[i].setStrokeWidth(2);
-	    }
-
-	    for (int i = 0; i < numOfStars; i++) {
-		    controller.addLine(azimuthLine[i]);
-		    controller.addLine(lineOfPosition[i]);
-	    }
-
-		Point intersectionPoint = MathematicalLine.getIntercept(new MathematicalLine(azimuthLine[0]),
-			    new MathematicalLine(azimuthLine[1]),
-				new MathematicalLine(azimuthLine[2]));
-		logger.info("Intersection point is " + intersectionPoint);
-
-		double finalLon = (60*(intersectionPoint.getX() - 320))/LONRATIO/CIRCLERADIUS;
-		double finalLat = (intersectionPoint.getY() - 240)*60/controller.compassRoseRadius();
-
-	    System.out.println("You are at " + finalLat + ", " + finalLon);
 
 		// renders the actual screen
 	    stage.setScene(new Scene(root));

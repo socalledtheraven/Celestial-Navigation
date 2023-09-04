@@ -16,7 +16,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="plotButton" alignment="CENTER" layoutX="406.0" layoutY="367.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Plot">
+      <Button fx:id="plotButton" alignment="CENTER" layoutX="406.0" layoutY="367.0" mnemonicParsing="false" onAction="#switchToPlotScreen" prefHeight="20.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Plot">
          <font>
             <Font size="18.0" />
          </font>
