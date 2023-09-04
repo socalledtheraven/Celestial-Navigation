@@ -1,15 +1,15 @@
 star1=
     s:Polaris,
     a:2.1;TOWARDS,
-    az:34.2,
-    ap=alat:28.1,alon:32.6,
+    az:34° 20.0',
+    ap=alat:28° 10.0',alon:32° 60.0',
 star2=
     s:Cassiopeia,
     a:1.4;TOWARDS,
-    az:54.3,
-    ap=alat:45.1,alon:21.8,
+    az:54° 30.0',
+    ap=alat:45° 10.0',alon:21° 80.0',
 star3=
     s:Betelgeuse,
     a:0.8;AWAY,
-    az:43.1,
-    ap=alat:46.8,alon:12.5,
+    az:43° 10.0',
+    ap=alat:46° 80.0',alon:12° 50.0',

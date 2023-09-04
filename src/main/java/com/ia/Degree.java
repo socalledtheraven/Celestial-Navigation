@@ -26,7 +26,7 @@ public class Degree {
         System.out.println(strDegrees);
         String[] parts = strDegrees.split(" ");
         // deals with standard degree symbols and the weird ones the almanac uses
-        this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", ""));
+        this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Â", ""));
         this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
     }
 
@@ -38,7 +38,7 @@ public class Degree {
 
     @Override
     public String toString() {
-        return degrees + "° " + minutes + "' ";
+        return degrees + "° " + minutes + "'";
     }
 
     public double toDouble() {

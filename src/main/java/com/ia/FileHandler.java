@@ -30,8 +30,9 @@ public class FileHandler {
             lines.add("    az:" + p[i].getAzimuth() + ",");
             lines.add("    ap=alat:" + p[i].getAssumedLatitude().toString() + ",alon:" + p[i].getAssumedLongitude().toString() + ",");
         }
+        clearFile(path);
         for (String l : lines) {
-            appendToFile(l, path);
+            appendToFile(path, l);
         }
         logger.info("Saved plot to " + path);
     }
@@ -57,11 +58,11 @@ public class FileHandler {
             star = lines.get((5*i)+1).replace("    ", "").split(":")[1].replace(",", "").strip();
             aVal = new AValue(lines.get((5*i)+2).replace("    ", "").split(":")[1].replace(",", "").strip());
             azimuth =
-                    new Degree(Double.parseDouble(lines.get((5*i)+3).replace("    ", "").split(":")[1].replace(",", "").strip()));
+                    new Degree(lines.get((5*i)+3).replace("    ", "").split(":")[1].replace(",", "").strip());
             aLat =
-                    new Latitude(Double.parseDouble(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[0].split(":")[1]));
+                    new Latitude(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[0].split(":")[1]);
             aLon =
-                    new Longitude(Double.parseDouble(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[1].replace(",", "").split(":")[1]));
+                    new Longitude(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[1].replace(",", "").split(":")[1]);
             plots.add(new Plot(star, aLat, aLon, aVal, azimuth));
         }
 
@@ -83,9 +84,18 @@ public class FileHandler {
             }
             return lines;
         } catch (IOException e) {
-            logger.error("Error in wholeFileRead: " + e.getMessage());
+            logger.error(e.getMessage());
         }
         return null;
+    }
+
+    public static void clearFile(String path) {
+        // clears a file
+        try (FileWriter fw = new FileWriter(path)) {
+            fw.write("");
+        } catch (IOException e) {
+            logger.error("Error in clearFile: " + e.getMessage());
+        }
     }
 
     private static void appendToFile(String filename, String text) {

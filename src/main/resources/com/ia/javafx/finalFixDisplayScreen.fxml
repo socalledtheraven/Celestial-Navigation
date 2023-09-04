@@ -11,7 +11,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="saveFixButton" alignment="CENTER" layoutX="275.0" layoutY="14.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Save Fix">
+      <Button fx:id="saveFixButton" alignment="CENTER" layoutX="275.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveFixes" prefHeight="20.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Save Fix">
          <font>
             <Font size="18.0" />
          </font>

@@ -26,9 +26,16 @@ public class FinalFixDisplayController {
 	private Button loadFixButton;
 	@FXML
 	private Button plotButton;
+	private String[] s;
+	private AValue[] a;
+	private Degree[] az;
+	private Latitude[] alat;
+	private Longitude[] alon;
+
 
 	public void loadFixes() {
 		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open fix file");
 		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
 		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
 		String[] s = new String[fixes.size()];
@@ -45,7 +52,34 @@ public class FinalFixDisplayController {
 			alon[i] = fixes.get(i).getAssumedLongitude();
 		}
 
+		removeStarDisplay();
 		addStarDisplay(fixes.size(), s, a, az, alat, alon);
+	}
+
+	public void saveFixes() {
+		Plot[] p = new Plot[s.length];
+		for (int i = 0; i < s.length; i++) {
+			p[i] = new Plot(s[i], alat[i], alon[i], a[i], az[i]);
+		}
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save fix file");
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Star fix data(*.fix)", "*.fix"));
+
+		File selectedFile = fileChooser.showSaveDialog(saveFixButton.getScene().getWindow());
+
+		if (selectedFile != null) {
+			if (selectedFile.getName().endsWith(".fix")) {
+				FileHandler.savePlot(p, selectedFile.getAbsolutePath());
+			}
+		}
+	}
+
+	private void removeStarDisplay() {
+		int l = pane.getChildren().size();
+		for (int i = 3; i < l; i++) {
+			pane.getChildren().remove(3);
+		}
 	}
 
 	public void addStarDisplay(int numStars, String[] stars, AValue[] aValues, Degree[] azimuths,
@@ -62,15 +96,18 @@ public class FinalFixDisplayController {
 			yPositions = new int[][]{{20, 70, 110, 150, 190}, {20, 70, 110, 150, 190}, {297, 240, 280, 320, 360}};
 		}
 
+		s = stars;
+		a = aValues;
+		az = azimuths;
+		alat = assumedLatitudes;
+		alon = assumedLongitudes;
+
 		for (int i = 0; i < numStars; i++) {
 			Label starLabel = new Label(stars[i]);
 			starLabel.setFont(new Font("System", 22));
 			starLabel.setStyle("-fx-border-color: black");
 			starLabel.setLayoutX(xPositions[i][0]);
 			starLabel.setLayoutY(yPositions[i][0]);
-
-//			FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
-//			System.out.println(fontLoader.computeStringWidth(label.getText(), label.getFont()));
 
 			final Text text = new Text(stars[i]);
 			text.setFont(new Font("System", 22));
@@ -79,11 +116,10 @@ public class FinalFixDisplayController {
 			text.applyCss();
 			// 1 is a fudge to account for the border
 			final double width = ceil(text.getLayoutBounds().getWidth()) + 1;
-			System.out.println(width);
 
 			pane.getChildren().add(starLabel);
 
-			Label aValueLabel = new Label(aValues[i].toString());
+			Label aValueLabel = new Label(aValues[i].toFormattedString());
 			aValueLabel.setFont(new Font("System", 18));
 			aValueLabel.setStyle("-fx-border-color: black");
 			aValueLabel.setLayoutX(xPositions[i][1]);

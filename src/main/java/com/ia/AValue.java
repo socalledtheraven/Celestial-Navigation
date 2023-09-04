@@ -32,6 +32,10 @@ public class AValue {
 
     @Override
     public String toString() {
-        return value + " degrees " + towards;
+        return value.toDouble() + ";" + towards;
+    }
+
+    public String toFormattedString() {
+        return value + " degrees " + towards.toString().toLowerCase();
     }
 }
