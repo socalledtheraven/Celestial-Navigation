@@ -25,9 +25,10 @@ public class FileHandler {
         ArrayList<String> lines = new ArrayList<>();
         for (int i = 0; i < p.length; i++) {
             lines.add("star" + (i+1) + "=");
-            lines.add("\ta:" + p[i].getAValue().toString() + ",");
-            lines.add("\taz:" + p[i].getAzimuth() + ",");
-            lines.add("\tap=alat:" + p[i].getAssumedLatitude().toString() + ",alon:" + p[i].getAssumedLongitude().toString() + ",");
+            lines.add("    s:" + p[i].getStar() + ",");
+            lines.add("    a:" + p[i].getAValue().toString() + ",");
+            lines.add("    az:" + p[i].getAzimuth() + ",");
+            lines.add("    ap=alat:" + p[i].getAssumedLatitude().toString() + ",alon:" + p[i].getAssumedLongitude().toString() + ",");
         }
         for (String l : lines) {
             appendToFile(l, path);
@@ -35,10 +36,11 @@ public class FileHandler {
         logger.info("Saved plot to " + path);
     }
 
-    public static Plot[] loadPlot(String path) {
+    public static ArrayList<Plot> loadPlot(String path) {
         // inverse of the above
         ArrayList<String> lines = wholeFileRead(path);
-        Plot[] plots = new Plot[3];
+        ArrayList<Plot> plots = new ArrayList<>();
+        String star;
         AValue aVal;
         Degree azimuth;
         Latitude aLat;
@@ -52,11 +54,15 @@ public class FileHandler {
         }
 
         for (int i = 0; i < numStars; i++) {
-            aVal = new AValue(lines.get(4*(i+1)).split(":")[1].replace(",", "").strip());
-            azimuth = new Degree(lines.get(4*(i+1)+1).split(":")[1].replace(",", "").strip());
-            aLat = new Latitude(lines.get(4*(i+1)+2).split("=")[1].split(",")[0].split(":")[1]);
-            aLon = new Longitude(lines.get(4*(i+1)+2).split("=")[1].split(",")[1].replace(",", "").split(":")[1]);
-            plots[i] = new Plot(aLat, aLon, aVal, azimuth);
+            star = lines.get((5*i)+1).replace("    ", "").split(":")[1].replace(",", "").strip();
+            aVal = new AValue(lines.get((5*i)+2).replace("    ", "").split(":")[1].replace(",", "").strip());
+            azimuth =
+                    new Degree(Double.parseDouble(lines.get((5*i)+3).replace("    ", "").split(":")[1].replace(",", "").strip()));
+            aLat =
+                    new Latitude(Double.parseDouble(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[0].split(":")[1]));
+            aLon =
+                    new Longitude(Double.parseDouble(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[1].replace(",", "").split(":")[1]));
+            plots.add(new Plot(star, aLat, aLon, aVal, azimuth));
         }
 
         logger.info("Loaded plot from " + path);

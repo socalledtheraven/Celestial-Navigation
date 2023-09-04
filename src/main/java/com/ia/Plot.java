@@ -2,12 +2,14 @@ package com.ia;
 
 public class Plot {
     // a final data class for handling file inputs/outputs and collecting the important info for a sight together
+    private String star;
     private Latitude aLat;
     private Longitude aLon;
     private AValue a;
     private Degree azimuth;
 
-    public Plot(Latitude aLat, Longitude aLon, AValue a, Degree azimuth) {
+    public Plot(String star, Latitude aLat, Longitude aLon, AValue a, Degree azimuth) {
+        this.star = star;
         this.aLat = aLat;
         this.aLon = aLon;
         this.a = a;
@@ -30,13 +32,7 @@ public class Plot {
         return azimuth;
     }
 
-    @Override
-    public String toString() {
-        return "Plot{" +
-                "aLat=" + aLat +
-                ", aLon=" + aLon +
-                ", a=" + a.toString() +
-                ", azimuth=" + azimuth +
-                '}';
+    public String getStar() {
+        return star;
     }
 }

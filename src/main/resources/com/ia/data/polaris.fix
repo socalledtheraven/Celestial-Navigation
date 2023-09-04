@@ -1,8 +1,15 @@
 star1=
-    a:,
-    az:,
-    ap=alat:,alon:,
+    s:Polaris,
+    a:2.1;TOWARDS,
+    az:34.2,
+    ap=alat:28.1,alon:32.6,
 star2=
-    a:,
-    az:,
-    ap=alat:,alon:,
+    s:Cassiopeia,
+    a:1.4;TOWARDS,
+    az:54.3,
+    ap=alat:45.1,alon:21.8,
+star3=
+    s:Betelgeuse,
+    a:0.8;AWAY,
+    az:43.1,
+    ap=alat:46.8,alon:12.5,

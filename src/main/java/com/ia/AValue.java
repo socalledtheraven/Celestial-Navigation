@@ -17,8 +17,8 @@ public class AValue {
     }
 
     public AValue(String a) {
-        String[] parts = a.split("=");
-        value = new Degree(parts[0]);
+        String[] parts = a.split(";");
+        value = new Degree(Double.parseDouble(parts[0]));
         towards = Towards.valueOf(parts[1]);
     }
 

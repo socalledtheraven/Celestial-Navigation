@@ -15,9 +15,8 @@ public class Longitude extends Degree {
         super(strDegrees);
     }
 
-    public Longitude(double doubDeg, Direction dir) {
+    public Longitude(double doubDeg) {
         super(doubDeg);
-        direction = dir;
     }
 
     public int getDegrees() {

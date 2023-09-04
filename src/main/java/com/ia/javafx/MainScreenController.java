@@ -17,12 +17,13 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainScreenController {
 	@FXML
 	private Button addStarButton;
 	@FXML
-	private Button loadPlotButton;
+	private Button loadFixButton;
 	@FXML
 	private Pane pane;
 	private int starsNum = 0;
@@ -65,7 +66,7 @@ public class MainScreenController {
 		stage.show();
 	}
 
-	public void switchToFinalDisplay(int numStars, AValue[] aValues, Degree[] azimuths,
+	public void switchToFinalDisplay(int numStars, String[] stars, AValue[] aValues, Degree[] azimuths,
 	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
 		Parent root = fxmlLoader.load();
@@ -76,19 +77,33 @@ public class MainScreenController {
 		stage.setTitle("Star Data Display");
 		stage.setWidth(550);
 		stage.setHeight(450);
-		stars = new String[]{"Cassiopeia", "Betelgeuse", "Polaris"};
 		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
-		pane.getScene().getWindow().hide();
-		controller.addStarDisplay(numStars, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
 		stage.show();
+		pane.getScene().getWindow().hide();
+
+		controller.addStarDisplay(numStars, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
 	}
 
 	@FXML
-	public void loadPlot() throws IOException {
+	public void loadFix() throws IOException {
 		FileChooser fileChooser = new FileChooser();
-		File f = fileChooser.showOpenDialog(loadPlotButton.getScene().getWindow());
-		Plot[] plots = FileHandler.loadPlot(f.getAbsolutePath());
+		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
+		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
+		String[] s = new String[fixes.size()];
+		AValue[] a = new AValue[fixes.size()];
+		Degree[] az = new Degree[fixes.size()];
+		Latitude[] alat = new Latitude[fixes.size()];
+		Longitude[] alon = new Longitude[fixes.size()];
 
+		for (int i = 0; i < fixes.size(); i++) {
+			s[i] = fixes.get(i).getStar();
+			a[i] = fixes.get(i).getAValue();
+			az[i] = fixes.get(i).getAzimuth();
+			alat[i] = fixes.get(i).getAssumedLatitude();
+			alon[i] = fixes.get(i).getAssumedLongitude();
+		}
+
+		switchToFinalDisplay(fixes.size(), s, a, az, alat, alon);
 	}
 
 	public void addStarDisplay(String star, String angularHeight, String indexCorrection, boolean indexCorrectionOn) {
@@ -193,7 +208,7 @@ public class MainScreenController {
 			}
 		});
 
-		continueButton.setLayoutX(loadPlotButton.getLayoutX());
+		continueButton.setLayoutX(loadFixButton.getLayoutX());
 		continueButton.setLayoutY(yPositions[1][4]);
 		return continueButton;
 	}
@@ -220,6 +235,6 @@ public class MainScreenController {
 			azimuths[i] = az;
 		}
 
-		switchToFinalDisplay(starsNum, aValues, azimuths, assumedLatitudes, assumedLongitudes);
+		switchToFinalDisplay(starsNum, stars, aValues, azimuths, assumedLatitudes, assumedLongitudes);
 	}
 }
