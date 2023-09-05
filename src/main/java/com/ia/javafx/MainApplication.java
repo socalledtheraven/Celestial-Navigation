@@ -26,18 +26,23 @@ public class MainApplication extends Application {
         stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
         stage.show();
 
-        String[] stars = {"Cassiopeia", "Betelgeuse", "Polaris"};
+        String[] stars = {"Alpheratz", "Polaris", "Capella"};
 
         double hc = 12;
         Degree ho = new Degree(10);
+
+        String[] angularHeights = {"52 0", "34 0", "24 0"};
+        String[] indexCorrections = {"1 0", "0 0", "2 0"};
+        boolean[] indexCorrectionOns = {true, false, false};
 
         AValue[] aValues = {new AValue(hc, ho), new AValue(hc, ho), new AValue(hc, ho)};
         Degree[] azimuths = {new Degree(5), new Degree(5), new Degree(5)};
         Latitude[] latitudes = {new Latitude(3), new Latitude(3), new Latitude(3)};
         Longitude[] longitudes = {new Longitude(6, 0), new Longitude(4, 0), new Longitude(4, 0)};
 
-//        controller.switchToFinalDisplay(3, stars, aValues, azimuths, latitudes, longitudes, new Latitude(-1));
-//        FileHandler.loadPlot("C:\\Users\\tomda\\Coding\\IA\\src\\main\\resources\\com\\ia\\data\\polaris.fix");
+//        for (int i = 0; i < 3; i++) {
+//            controller.addStarDisplay(stars[i], angularHeights[i], indexCorrections[i], indexCorrectionOns[i]);
+//        }
     }
 
     public static void main(String[] args) {

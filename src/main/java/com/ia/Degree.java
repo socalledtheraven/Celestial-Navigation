@@ -23,11 +23,21 @@ public class Degree {
     }
 
     public Degree(String strDegrees) {
-        System.out.println(strDegrees);
+        if (strDegrees.contains("◦") && !(strDegrees.contains(" "))) {
+            strDegrees =  strDegrees.replace("◦", " ");
+        }
+
         String[] parts = strDegrees.split(" ");
-        // deals with standard degree symbols and the weird ones the almanac uses
-        this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Â", ""));
-        this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
+        if (parts.length == 2) {
+            this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Â", ""));
+            this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
+        } else if ((parts.length == 1) && (parts[0].contains("°"))) {
+            this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Â", ""));
+            this.minutes = 0;
+        } else {
+            this.degrees = 0;
+            this.minutes = Utilities.round(Double.parseDouble(parts[0].replace("'", "")), 2);
+        }
     }
 
     public Degree(double doubleDegree) {

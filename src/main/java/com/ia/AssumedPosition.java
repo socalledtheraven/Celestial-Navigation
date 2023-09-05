@@ -25,9 +25,9 @@ public class AssumedPosition {
         double GHAMins = FileHandler.getAriesGHA().getMinutes();
 
         if (aLonDir == Direction.WEST) {
-            return new Longitude((int) dLonDegs, GHAMins, aLonDir);
+            return new Longitude((int) dLonDegs, Utilities.round(GHAMins, 1), aLonDir);
         } else {
-            return new Longitude((int) dLonDegs, 60-GHAMins, aLonDir);
+            return new Longitude((int) dLonDegs, Utilities.round(60-GHAMins, 1), aLonDir);
         }
     }
 

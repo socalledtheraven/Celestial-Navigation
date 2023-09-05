@@ -33,8 +33,9 @@ public class DPosController {
 	private MainScreenController main;
 
 	public void loadHemispheres() {
-		latitudeHemisphereBox.setItems(FXCollections.observableList(List.of(new String[]{"East", "West"})));
+		longitudeHemisphereBox.setItems(FXCollections.observableList(List.of(new String[]{"East", "West"})));
 		latitudeHemisphereBox.setItems(FXCollections.observableList(List.of(new String[]{"North", "South"})));
+		latitudeDegrees.requestFocus();
 	}
 
 	public void getData() throws IOException {

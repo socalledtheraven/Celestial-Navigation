@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.TextStyle;
@@ -121,7 +122,7 @@ public class FileHandler {
 
     private static String almanacPageText(int page) {
         // uses pdfbox to scrape text from the almanac pdfs. much less hassle than reading them myself
-        try (PDDocument document = PDDocument.load(new File(FileHandler.class.getResource("almanac.pdf").toURI()))) {
+        try (PDDocument document = PDDocument.load(new File("src/main/resources/com/ia/data/almanac.pdf"))) {
             PDFTextStripper stripper = new PDFTextStripper();
             stripper.setStartPage(page); // Start extracting text from the current page
             stripper.setEndPage(page); // Extract text only from the current page
@@ -171,7 +172,7 @@ public class FileHandler {
         Double[] apparentAltitudes = new Double[163];
         Double[] corrections = new Double[163];
 
-        String pageText = pageTexts[0];
+        String pageText = pageTexts[1];
         // finding the start of the table
         String extractedText = pageText.substring(pageText.indexOf("0 00"));
         // reformatting the +- symbols to reduce whitespace inconsistency
@@ -214,7 +215,7 @@ public class FileHandler {
             logger.error("Error in the first page of altitude correction: " + e.getMessage());
         }
 
-        pageText = pageTexts[1];
+        pageText = pageTexts[0];
 
         // the _other_ altitude correction table (completely different, ofc)
         extractedText = pageText.substring(pageText.indexOf("meters ' feet meters '")+24);
@@ -263,8 +264,10 @@ public class FileHandler {
     public static Degree altitudeCorrection(Degree apparentAltitude) {
         // finds the correction for the given apparent altitude
         // the pages are hardcoded for the modern almanac
-        Double[] apparentAltitudes = altitudeCorrectionArrs(new String[]{almanacPageText(281), almanacPageText(282)})[0];
-        Double[] corrections = altitudeCorrectionArrs(new String[]{almanacPageText(281), almanacPageText(282)})[1];
+        Double[][] altitudeCorrectionDetails = altitudeCorrectionArrs(new String[]{almanacPageText(281),
+                almanacPageText(282)});
+        Double[] apparentAltitudes = altitudeCorrectionDetails[0];
+        Double[] corrections = altitudeCorrectionDetails[1];
 
         // finds the correction in between the values bc that's how it works for some reason
         for (int i = 1; i < apparentAltitudes.length; i++) {

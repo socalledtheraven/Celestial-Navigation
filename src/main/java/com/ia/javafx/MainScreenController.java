@@ -27,11 +27,12 @@ public class MainScreenController {
 	@FXML
 	private Pane pane;
 	private int starsNum = 0;
+	private boolean firstStarSet = true;
 	private Line firstVertical;
-	private String[] stars = new String[3];
-	private Degree[] angularHeights;
-	private Degree[] indexCorrections;
-	private boolean[] indexCorrectionOnValues;
+	private ArrayList<String> stars = new ArrayList<>();
+	private ArrayList<Degree> angularHeights = new ArrayList<>();
+	private ArrayList<Degree> indexCorrections = new ArrayList<>();
+	private ArrayList<Boolean> indexCorrectionOnValues = new ArrayList<>();
 
 	@FXML
 	public void addStar() throws IOException {
@@ -64,9 +65,10 @@ public class MainScreenController {
 		stage.setHeight(430);
 		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
 		stage.show();
+
 	}
 
-	public void switchToFinalDisplay(int numStars, String[] stars, AValue[] aValues, Degree[] azimuths,
+	public void switchToFinalDisplay(int numStars, ArrayList<String> stars, AValue[] aValues, Degree[] azimuths,
 	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes, Latitude DRLatitude) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
 		Parent root = fxmlLoader.load();
@@ -89,14 +91,14 @@ public class MainScreenController {
 		FileChooser fileChooser = new FileChooser();
 		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
 		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
-		String[] s = new String[fixes.size()];
+		ArrayList<String> s = new ArrayList<>();
 		AValue[] a = new AValue[fixes.size()];
 		Degree[] az = new Degree[fixes.size()];
 		Latitude[] alat = new Latitude[fixes.size()];
 		Longitude[] alon = new Longitude[fixes.size()];
 
 		for (int i = 0; i < fixes.size(); i++) {
-			s[i] = fixes.get(i).getStar();
+			s.add(i, fixes.get(i).getStar());
 			a[i] = fixes.get(i).getAValue();
 			az[i] = fixes.get(i).getAzimuth();
 			alat[i] = fixes.get(i).getAssumedLatitude();
@@ -111,7 +113,11 @@ public class MainScreenController {
 		int[][] xPositions = {{20, 40, 30, 14}, {20, 40, 30, 14}, {200, 220, 210, -1}};
 		int[][] yPositions = {{20, 70, 110, 150, 200}, {200, 250, 290, 330, 380}, {100, 150, 190, 230, -1}};
 
-		stars[starsNum] = star;
+		if (firstStarSet) {
+			stars.add(star);
+		} else {
+			stars.set(starsNum, star);
+		}
 		Label starLabel = new Label(star);
 		starLabel.setFont(new Font("System", 26));
 		starLabel.setStyle("-fx-border-color: black");
@@ -120,7 +126,11 @@ public class MainScreenController {
 
 		pane.getChildren().add(starLabel);
 
-		angularHeights[starsNum] = new Degree(angularHeight);
+		if (firstStarSet) {
+			angularHeights.add(new Degree(angularHeight));
+		} else {
+			angularHeights.set(starsNum, new Degree(angularHeight));
+		}
 		Label angularHeightLabel = new Label(angularHeight);
 		angularHeightLabel.setFont(new Font("System", 21));
 		angularHeightLabel.setStyle("-fx-border-color: black");
@@ -129,7 +139,13 @@ public class MainScreenController {
 
 		pane.getChildren().add(angularHeightLabel);
 
-		indexCorrections[starsNum] = new Degree(indexCorrection);
+		if (firstStarSet) {
+			indexCorrections.add(new Degree(indexCorrection));
+		} else {
+			System.out.println(firstStarSet);
+			System.out.println(starsNum);
+			indexCorrections.set(starsNum, new Degree(indexCorrection));
+		}
 		Label indexCorrectionLabel = new Label(indexCorrection);
 		indexCorrectionLabel.setFont(new Font("System", 21));
 		indexCorrectionLabel.setStyle("-fx-border-color: black");
@@ -138,7 +154,11 @@ public class MainScreenController {
 
 		pane.getChildren().add(indexCorrectionLabel);
 
-		indexCorrectionOnValues[starsNum] = indexCorrectionOn;
+		if (firstStarSet) {
+			indexCorrectionOnValues.add(indexCorrectionOn);
+		} else {
+			indexCorrectionOnValues.set(starsNum, indexCorrectionOn);
+		}
 		Label indexCorrectionOnLabel = new Label(indexCorrectionOn ? "On" : "Off");
 		indexCorrectionOnLabel.setFont(new Font("System", 21));
 		indexCorrectionOnLabel.setStyle("-fx-border-color: black");
@@ -183,6 +203,7 @@ public class MainScreenController {
 
 		if (starsNum == 2) {
 			pane.getChildren().remove(addStarButton);
+			firstStarSet = false;
 		} else {
 			addStarButton.setLayoutX(xPositions[starsNum][3]);
 			addStarButton.setLayoutY(yPositions[starsNum][4]);
@@ -219,13 +240,14 @@ public class MainScreenController {
 		Latitude[] assumedLatitudes = new Latitude[3];
 		Longitude[] assumedLongitudes = new Longitude[3];
 		for (int i = 0; i < starsNum; i++) {
-			Star star = new Star(stars[i]);
+			System.out.println(stars.get(i));
+			Star star = new Star(stars.get(i));
 			DRPosition dr = new DRPosition(latitude, longitude);
 			AssumedPosition ap = new AssumedPosition(dr, star);
 			assumedLatitudes[i] = ap.getAssumedLatitude();
 			assumedLongitudes[i] = ap.getAssumedLongitude();
 
-			StarSight st = new StarSight(angularHeights[i], indexCorrections[i], indexCorrectionOnValues[i], eyeHeight);
+			StarSight st = new StarSight(angularHeights.get(i), indexCorrections.get(i), indexCorrectionOnValues.get(i), eyeHeight);
 			Degree Ho = st.getObservedHeight();
 			double Hc = ap.getExpectedHeight();
 			AValue a = new AValue(Hc, Ho);
