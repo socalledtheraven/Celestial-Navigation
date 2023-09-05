@@ -7,9 +7,9 @@ import static java.lang.Math.sqrt;
 
 public class Point {
 	// allows for easy handling both of individual points and cartesian/polar coordinates
-	private double cartesianX;
-	private double cartesianY;
-	private double radius;
+	private final double cartesianX;
+	private final double cartesianY;
+	private final double radius;
 	private double angle;
 
 	public Point(double cartesianX, double cartesianY) {
@@ -17,7 +17,6 @@ public class Point {
 		this.cartesianY = cartesianY;
 		// calculates using pythagoras
 		radius = sqrt((cartesianX * cartesianX) + (cartesianY * cartesianY));
-		// atan2 is a builtin
 		angle = Math.atan2(cartesianY, cartesianX);
 	}
 

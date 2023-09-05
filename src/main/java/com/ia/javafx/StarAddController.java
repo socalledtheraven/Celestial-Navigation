@@ -27,6 +27,7 @@ public class StarAddController {
 
 
 	public void loadStars() {
+		// list taken directly from the almanac, unaltered
 		String[] stars = {"Alpheratz", "Ankaa", "Schedar", "Diphda", "Achernar", "Hamal", "Polaris", "Acamar", "Menkar", "Mirfak", "Aldebaran", "Rigel", "Capella", "Bellatrix", "Elnath", "Alnilam", "Betelgeuse", "Canopus", "Sirius", "Adhara", "Procyon", "Pollux", "Avior", "Suhail", "Miaplacidus", "Alphard", "Regulus", "Dubhe", "Denebola", "Gienah", "Acrux", "Gacrux", "Alioth", "Spica", "Alkaid", "Hadar", "Menkent", "Arcturus", "Rigil Kent.", "Kochab", "Zuben'ubi", "Alphecca", "Antares", "Atria", "Sabik", "Shaula", "Rasalhague", "Eltanin", "Kaus Aust.", "Vega", "Nunki", "Altair", "Peacock", "Deneb", "Enif", "Al Na’ir", "Fomalhaut", "Scheat", "Markab"};
 		starDropdown.setItems(FXCollections.observableList(List.of(stars)));
 	}

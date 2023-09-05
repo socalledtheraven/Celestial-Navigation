@@ -1,7 +1,7 @@
 package com.ia;
 
 public class Degree {
-    private int degrees;
+    private final int degrees;
     private double minutes;
 
     public Degree(int degrees, double minutes) {
@@ -28,13 +28,17 @@ public class Degree {
         }
 
         String[] parts = strDegrees.split(" ");
+        // handles the 3 different ways we can be recieving string input
         if (parts.length == 2) {
+            // almanac
             this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Â", ""));
             this.minutes = Utilities.round(Double.parseDouble(parts[1].replace("'", "")), 2);
         } else if ((parts.length == 1) && (parts[0].contains("°"))) {
+            // user input, degrees box
             this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Â", ""));
             this.minutes = 0;
         } else {
+            // user input, minutes box
             this.degrees = 0;
             this.minutes = Utilities.round(Double.parseDouble(parts[0].replace("'", "")), 2);
         }

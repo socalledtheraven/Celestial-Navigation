@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ia.javafx.PolarController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="com.ia.javafx.PolarController">
    <Circle fx:id="compassRose" fill="#ffffff00" layoutX="320.0" layoutY="240.0" radius="208.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.5" />
    <Line endY="426.5" layoutX="320.0" layoutY="59.0" startY="-64.0" strokeWidth="0.5" />
    <Line fx:id="topLine" endX="350.5" layoutX="312.0" layoutY="32.0" startX="-312.0" strokeWidth="0.5" />
@@ -25,17 +25,17 @@
       <font>
          <Font size="14.0" />
       </font></Label>
-   <Button alignment="CENTER" layoutX="506.0" layoutY="386.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Load Fix">
+   <Button fx:id="loadFixButton" alignment="CENTER" layoutX="506.0" layoutY="386.0" mnemonicParsing="false" onAction="#loadFixes" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Load Fix">
       <font>
          <Font size="18.0" />
       </font>
    </Button>
-   <Button alignment="CENTER" layoutX="506.0" layoutY="339.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Save Fix">
+   <Button fx:id="saveFixButton" alignment="CENTER" layoutX="506.0" layoutY="339.0" mnemonicParsing="false" onAction="#saveFixes" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Save Fix">
       <font>
          <Font size="18.0" />
       </font>
    </Button>
-   <Button alignment="CENTER" layoutX="506.0" layoutY="56.0" mnemonicParsing="false" onAction="#displayValues" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Values">
+   <Button fx:id="valuesButton" alignment="CENTER" layoutX="506.0" layoutY="56.0" mnemonicParsing="false" onAction="#displayValues" prefHeight="19.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Values">
       <font>
          <Font size="18.0" />
       </font>

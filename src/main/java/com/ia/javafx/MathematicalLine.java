@@ -7,8 +7,8 @@ import static java.lang.Math.abs;
 public class MathematicalLine {
 	// a class for lines in format y=mx+c for distances, gradients and so on
 	// most importantly, allows for intercepts - absolutely crucial for finding actual positions
-	private double gradient;
-	private double yIntercept;
+	private final double gradient;
+	private final double yIntercept;
 
 	public MathematicalLine(double gradient, double yIntercept) {
 		this.gradient = gradient;
@@ -29,15 +29,8 @@ public class MathematicalLine {
 	}
 
 	public static Point getIntercept(MathematicalLine line1, MathematicalLine line2) {
-		double combinedIntercept = abs(line1.yIntercept - line2.yIntercept);
-		double combinedGradient = abs(line1.gradient - line2.gradient);
-		double x = combinedIntercept / combinedGradient;
-		return new Point(x, line1.getY(x));
-	}
-
-	public static Point getIntercept(MathematicalLine line1, MathematicalLine line2, MathematicalLine line3) {
-		// yes, I know this only uses two for the intercept. this is because there's enough floating-point
-		// imperfections that the lines are unlikely to really intersect perfectly
+		// I use this even for triple line intersections, because due to floating-point errors, inadequately precise
+		// almanac entries, etc., the three lines will almost certainly not align perfectly
 		double combinedIntercept = abs(line1.yIntercept - line2.yIntercept);
 		double combinedGradient = abs(line1.gradient - line2.gradient);
 		double x = combinedIntercept / combinedGradient;

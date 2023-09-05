@@ -29,13 +29,14 @@ public class MainScreenController {
 	private int starsNum = 0;
 	private boolean firstStarSet = true;
 	private Line firstVertical;
-	private ArrayList<String> stars = new ArrayList<>();
-	private ArrayList<Degree> angularHeights = new ArrayList<>();
-	private ArrayList<Degree> indexCorrections = new ArrayList<>();
-	private ArrayList<Boolean> indexCorrectionOnValues = new ArrayList<>();
+	private final ArrayList<String> stars = new ArrayList<>();
+	private final ArrayList<Degree> angularHeights = new ArrayList<>();
+	private final ArrayList<Degree> indexCorrections = new ArrayList<>();
+	private final ArrayList<Boolean> indexCorrectionOnValues = new ArrayList<>();
 
 	@FXML
 	public void addStar() throws IOException {
+		// opens a new window, passing in this controller so the star screen can add the information back here
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("starSelectScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		StarAddController controller = (StarAddController) fxmlLoader.getController();
@@ -52,6 +53,8 @@ public class MainScreenController {
 	}
 
 	public void addDeterminedPosition() throws IOException {
+		// opens a new window, passing in this controller so the determined position/eye height input screen can add
+		// the data back here
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("determinedPositionInputScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		DPosController controller = (DPosController) fxmlLoader.getController();
@@ -70,6 +73,7 @@ public class MainScreenController {
 
 	public void switchToFinalDisplay(int numStars, ArrayList<String> stars, AValue[] aValues, Degree[] azimuths,
 	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes, Latitude DRLatitude) throws IOException {
+		// switches fully to the new screen, deleting this window after it's rendered
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
@@ -92,6 +96,7 @@ public class MainScreenController {
 		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
 		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
 		ArrayList<String> s = new ArrayList<>();
+
 		AValue[] a = new AValue[fixes.size()];
 		Degree[] az = new Degree[fixes.size()];
 		Latitude[] alat = new Latitude[fixes.size()];
@@ -109,15 +114,17 @@ public class MainScreenController {
 	}
 
 	public void addStarDisplay(String star, String angularHeight, String indexCorrection, boolean indexCorrectionOn) {
-		// use double int arr for each position, with all the magic numbers contained within
+		// these positions were worked out with trial and error and absolutely will not scale to different screen sizes
 		int[][] xPositions = {{20, 40, 30, 14}, {20, 40, 30, 14}, {200, 220, 210, -1}};
 		int[][] yPositions = {{20, 70, 110, 150, 200}, {200, 250, 290, 330, 380}, {100, 150, 190, 230, -1}};
 
+		// these record the data so that it can be reused when they're needed for the final calculation
 		if (firstStarSet) {
 			stars.add(star);
 		} else {
 			stars.set(starsNum, star);
 		}
+
 		Label starLabel = new Label(star);
 		starLabel.setFont(new Font("System", 26));
 		starLabel.setStyle("-fx-border-color: black");
@@ -131,6 +138,7 @@ public class MainScreenController {
 		} else {
 			angularHeights.set(starsNum, new Degree(angularHeight));
 		}
+
 		Label angularHeightLabel = new Label(angularHeight);
 		angularHeightLabel.setFont(new Font("System", 21));
 		angularHeightLabel.setStyle("-fx-border-color: black");
@@ -142,8 +150,6 @@ public class MainScreenController {
 		if (firstStarSet) {
 			indexCorrections.add(new Degree(indexCorrection));
 		} else {
-			System.out.println(firstStarSet);
-			System.out.println(starsNum);
 			indexCorrections.set(starsNum, new Degree(indexCorrection));
 		}
 		Label indexCorrectionLabel = new Label(indexCorrection);
@@ -167,8 +173,8 @@ public class MainScreenController {
 
 		pane.getChildren().add(indexCorrectionOnLabel);
 
-		// use vertical and horizontal lines
-
+		// this section enables the first vertical line to extend after the second star is added, small detail that
+		// looks good
 		if (starsNum == 0) {
 			firstVertical = new Line(xPositions[starsNum][2], starLabel.getLayoutY()+40, xPositions[starsNum][2],
 					indexCorrectionOnLabel.getLayoutY()+14);
@@ -195,7 +201,6 @@ public class MainScreenController {
 				indexCorrectionOnLabel.getLayoutX(), indexCorrectionOnLabel.getLayoutY()+14);
 		pane.getChildren().add(smallHorizontalLine3);
 
-		// be sure to resize the smaller window popup
 		if (starsNum != 0) {
 			Button continueButton = getButton(yPositions);
 			pane.getChildren().add(continueButton);
@@ -239,8 +244,9 @@ public class MainScreenController {
 		Degree[] azimuths = new Degree[3];
 		Latitude[] assumedLatitudes = new Latitude[3];
 		Longitude[] assumedLongitudes = new Longitude[3];
+
+		// carries out all the main calculations, which are of course split over lots of different files
 		for (int i = 0; i < starsNum; i++) {
-			System.out.println(stars.get(i));
 			Star star = new Star(stars.get(i));
 			DRPosition dr = new DRPosition(latitude, longitude);
 			AssumedPosition ap = new AssumedPosition(dr, star);

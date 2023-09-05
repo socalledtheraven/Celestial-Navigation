@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ia.javafx.FinalFixDisplayController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="com.ia.javafx.FinalFixDisplayController">
    <children>
       <Button fx:id="loadFixButton" alignment="CENTER" layoutX="406.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadFixes" prefHeight="20.0" prefWidth="120.0" style="-fx-background-radius: 11;" text="Load Fix">
          <font>

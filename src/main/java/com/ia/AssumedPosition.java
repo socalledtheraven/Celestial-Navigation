@@ -4,10 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class AssumedPosition {
-    private Latitude assumedLatitude;
-    private Longitude assumedLongitude;
-    private double expectedHeight;
-    private Degree azimuth;
+    private final Latitude assumedLatitude;
+    private final Longitude assumedLongitude;
+    private final double expectedHeight;
+    private final Degree azimuth;
     private static final Logger logger = LogManager.getLogger();
 
     public AssumedPosition(DRPosition dPos, Star star) {
@@ -24,6 +24,7 @@ public class AssumedPosition {
         double dLonDegs = dPos.getLongitude().getDegrees();
         double GHAMins = FileHandler.getAriesGHA().getMinutes();
 
+        // 2 different methods of calculation for different hemispheres
         if (aLonDir == Direction.WEST) {
             return new Longitude((int) dLonDegs, Utilities.round(GHAMins, 1), aLonDir);
         } else {
@@ -71,6 +72,7 @@ public class AssumedPosition {
         double Zn =
                 Utilities.acos((Utilities.sin(dec) - Utilities.sin(alat) * Utilities.sin(expectedHeight)) / (Utilities.cos(alat) * Utilities.cos(expectedHeight)));
 
+        // deals with north/south hemisphere differences
         double Z;
         if (assumedLatitude.getDirection() == Direction.NORTH) {
             if (calculateLHA(star).getDegrees() > 180) {

@@ -25,10 +25,6 @@ public class Latitude extends Degree {
         direction = d;
     }
 
-    public Latitude(double doubleDegree) {
-        super(doubleDegree);
-    }
-
     public int getDegrees() {
         return super.getDegrees();
     }

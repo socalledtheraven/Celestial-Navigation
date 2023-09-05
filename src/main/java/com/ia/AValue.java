@@ -22,24 +22,19 @@ public class AValue {
         towards = Towards.valueOf(parts[1]);
     }
 
-    public Degree getValue() {
-        return value;
-    }
-
-    public Towards getTowards() {
-        return towards;
-    }
-
     public double toDouble() {
+        // since this is effectively a wrapper for a vector from a point, it can be converted to a scalar +/- difference
         return value.toDouble() * (towards==Towards.TOWARDS ? 1 : -1);
     }
 
     public String toFormattedString() {
+        // for display
         return value + " degrees " + towards.toString().toLowerCase();
     }
 
     @Override
     public String toString() {
+        // for files
         return value.toDouble() + ";" + towards;
     }
 

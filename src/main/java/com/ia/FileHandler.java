@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.TextStyle;
@@ -16,9 +15,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class FileHandler {
-    private static LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-    // separate now for testing w/ 2016 almanac
-//    private static LocalDateTime now = LocalDateTime.of(2016, 9, 22, 1, 20, 15);
+    private static final LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
     private static final Logger logger = LogManager.getLogger();
 
     public static void savePlot(Plot[] p, String path) {
@@ -31,10 +28,13 @@ public class FileHandler {
             lines.add("    az:" + p[i].getAzimuth() + ",");
             lines.add("    ap=alat:" + p[i].getAssumedLatitude().toString() + ",alon:" + p[i].getAssumedLongitude().toString() + ",");
         }
+
         clearFile(path);
+
         for (String l : lines) {
             appendToFile(path, l);
         }
+
         logger.info("Saved plot to " + path);
     }
 
@@ -49,13 +49,14 @@ public class FileHandler {
         Longitude aLon;
         int numStars = 0;
 
-        for (int i = 0; i < lines.size(); i++) {
-            if (lines.get(i).contains("star")) {
-                numStars++;
-            }
-        }
+	    for (String line : lines) {
+		    if (line.contains("star")) {
+			    numStars++;
+		    }
+	    }
 
         for (int i = 0; i < numStars; i++) {
+            // since each block is 5 lines long, we use 5i plus an offset
             star = lines.get((5*i)+1).replace("    ", "").split(":")[1].replace(",", "").strip();
             aVal = new AValue(lines.get((5*i)+2).replace("    ", "").split(":")[1].replace(",", "").strip());
             azimuth =
@@ -101,7 +102,6 @@ public class FileHandler {
 
     private static void appendToFile(String filename, String text) {
         // APPENDS text to a file
-        // TODO: add real error handling
         try (PrintWriter pr = new PrintWriter(new FileWriter(filename, true))) {
             pr.println(text);
         }
@@ -122,15 +122,14 @@ public class FileHandler {
 
     private static String almanacPageText(int page) {
         // uses pdfbox to scrape text from the almanac pdfs. much less hassle than reading them myself
+        // using a relative file path is bad form, but I couldn't get the filepath thing to work
         try (PDDocument document = PDDocument.load(new File("src/main/resources/com/ia/data/almanac.pdf"))) {
             PDFTextStripper stripper = new PDFTextStripper();
-            stripper.setStartPage(page); // Start extracting text from the current page
-            stripper.setEndPage(page); // Extract text only from the current page
+            stripper.setStartPage(page);
+            stripper.setEndPage(page);
             return stripper.getText(document);
         } catch (Exception e) {
-            // TODO: do some proper error handling after testing this ie invalid page numbers due to invalid dates etc
             logger.error("Error in almanacPageText: " + e.getMessage());
-            System.out.println("Sorry, the date is invalid. Please try again.");
         }
         return null;
     }
@@ -140,8 +139,6 @@ public class FileHandler {
         String extractedText = pageText.substring(pageText.indexOf("Stars") + 16);
         // the table ends 20 characters before pass
         extractedText = extractedText.substring(0, extractedText.indexOf("pass")-20);
-
-        // probably not the best way to handle this but I can't really detect official pdf tables
 
         try (Scanner scanner = new Scanner(extractedText)) {
             String[] parts = new String[2];
@@ -160,9 +157,7 @@ public class FileHandler {
             }
             return new String[][]{parts, stars};
         } catch (Exception e) {
-            // TODO: again, error handling
             logger.error("Error in starDetails: " + e.getMessage());
-            System.out.println("Getting star details failed. Please try again.");
         }
         return null;
     }
@@ -246,7 +241,7 @@ public class FileHandler {
 
                 // every other line has corrections vs apparent altitudes
                 if (counter % 2 == 0) {
-                    line = replaceIfOdd(line);
+                    line = formatDecimalPoints(line);
                     apparentAltitudes[108+(counter/2)] = Double.parseDouble(line.split(" ")[2]);
                 } else {
                     corrections[108+(counter/2)] = Double.parseDouble(line.split(" ")[4]);
@@ -289,7 +284,7 @@ public class FileHandler {
         return parts[2];
     }
 
-    private static String replaceIfOdd(String stringToChange) {
+    private static String formatDecimalPoints(String stringToChange) {
         // a function that adds a decimal point in certain places where it's needed
         final String separator = "#######";
         String splittingString = stringToChange.replaceAll(" ", separator + " ");
@@ -338,5 +333,30 @@ public class FileHandler {
     public static int timeToPageNum() {
         // -1 for off-by-one, /3 bc 3 per page
         return ((now.getMinute()-1)/3) + 260;
+    }
+
+    public static File getLatestFilefromDir(String dirPath){
+        File dir = new File(dirPath);
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) {
+            return null;
+        }
+
+        File lastModifiedFile = files[0];
+        for (int i = 1; i < files.length; i++) {
+            if (lastModifiedFile.lastModified() < files[i].lastModified()) {
+                lastModifiedFile = files[i];
+            }
+        }
+        return lastModifiedFile;
+    }
+
+    public static void replaceFile(File f1, File f2) {
+        // replaces the contents of one file with another
+        clearFile(f1.getPath());
+        ArrayList<String> lines = wholeFileRead(f2.getPath());
+        for (String line : lines) {
+            appendToFile(f1.getPath(), line);
+        }
     }
 }
