@@ -2,13 +2,11 @@ package com.ia.javafx;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Objects;
 
 public class StarAddController {
 	@FXML
@@ -23,6 +21,8 @@ public class StarAddController {
 	private TextField angularHeightMinutes;
 	@FXML
 	private TextField indexCorr;
+	@FXML
+	private Label errorLabel;
 	private MainScreenController main;
 
 
@@ -34,14 +34,87 @@ public class StarAddController {
 
 	public void getData() {
 		String star = starDropdown.getValue();
+
+		if (star == null) {
+			errorLabel.setVisible(true);
+			starDropdown.setStyle("-fx-border-color: red");
+			return;
+		}
+
 		String angularHeight =
 				angularHeightDegrees.getText() + "° " + angularHeightMinutes.getText() + "'";
+
+		if (angularHeightDegrees.getText().isEmpty()) {
+			errorLabel.setVisible(true);
+			angularHeightDegrees.setStyle("-fx-border-color: red");
+			return;
+		} else if (!(angularHeightDegrees.getText().matches("^[0-9.]+$")) || angularHeightDegrees.getText().contains(
+				" ")) {
+			errorLabel.setVisible(true);
+			angularHeightDegrees.setStyle("-fx-border-color: red");
+			return;
+		} else if (Double.parseDouble(angularHeightDegrees.getText()) > 360.0) {
+			errorLabel.setVisible(true);
+			angularHeightDegrees.setStyle("-fx-border-color: red");
+			return;
+		}
+
+		if (angularHeightMinutes.getText().isEmpty()) {
+			errorLabel.setVisible(true);
+			angularHeightMinutes.setStyle("-fx-border-color: red");
+			return;
+		} else if (!(angularHeightMinutes.getText().matches("^[0-9.]+$")) || angularHeightMinutes.getText().contains(
+				" ")) {
+			errorLabel.setVisible(true);
+			angularHeightMinutes.setStyle("-fx-border-color: red");
+			return;
+		} else if (Double.parseDouble(angularHeightMinutes.getText()) > 60.0) {
+			errorLabel.setVisible(true);
+			angularHeightMinutes.setStyle("-fx-border-color: red");
+			return;
+		}
+
 		String indexCorrection = indexCorr.getText() + "°";
+
+		if (indexCorr.getText().isEmpty()) {
+			errorLabel.setVisible(true);
+			indexCorr.setStyle("-fx-border-color: red");
+			return;
+		}
+
 		boolean indexCorrectionOn = indexCorrOn.isPressed();
 
 		main.addStarDisplay(star, angularHeight, indexCorrection, indexCorrectionOn);
 		Stage temp = (Stage) continueButton.getScene().getWindow();
 		temp.close();
+	}
+
+	public void deErrorStar() {
+		if (starDropdown.getStyle().equals("-fx-border-color: red")) {
+			errorLabel.setVisible(false);
+			starDropdown.setStyle("-fx-border-color: black");
+		}
+	}
+
+	public void deErrorDegrees() {
+		if (angularHeightDegrees.getStyle().equals("-fx-border-color: red")) {
+			errorLabel.setVisible(false);
+			angularHeightDegrees.setStyle("-fx-border-color: black");
+		}
+	}
+
+	public void deErrorMinutes() {
+		if (angularHeightMinutes.getStyle().equals("-fx-border-color: red")) {
+			errorLabel.setVisible(false);
+			angularHeightMinutes.setStyle("-fx-border-color: black");
+		}
+	}
+
+	public void deErrorIndexCorr() {
+		if (indexCorr.getStyle().equals("-fx-border-color: red")) {
+			errorLabel.setVisible(false);
+			indexCorr.setStyle("-fx-border-color: black");
+		}
 	}
 
 	public void setMain(MainScreenController main) {

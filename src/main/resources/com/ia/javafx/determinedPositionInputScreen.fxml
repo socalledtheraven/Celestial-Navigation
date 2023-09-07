@@ -7,53 +7,58 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="com.ia.javafx.DPosController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ia.javafx.DPosController">
    <children>
       <Label layoutX="164.0" layoutY="94.0" text="DR Position">
          <font>
             <Font size="42.0" />
          </font>
       </Label>
-      <TextField fx:id="longitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="211.0" promptText="°">
+      <TextField fx:id="longitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeDegrees" promptText="°" style="-fx-border-color: black;">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="58.0" layoutY="183.0" prefHeight="20.0" prefWidth="130.0" text="Dead Reckoning Lat:">
+      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="183.0" prefHeight="22.0" prefWidth="145.0" style="-fx-border-color: black;" text="Dead Reckoning Lat: ">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="longitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="211.0" prefHeight="25.0" prefWidth="70.0" promptText="'">
+      <TextField fx:id="longitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeMinutes" prefHeight="25.0" prefWidth="70.0" promptText="'" style="-fx-border-color: black;">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="51.0" layoutY="216.0" prefHeight="20.0" prefWidth="137.0" text="Dead Reckoning Lon:">
+      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="216.0" prefHeight="22.0" prefWidth="145.0" style="-fx-border-color: black;" text="Dead Reckoning Lon: ">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="latitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="178.0" promptText="°">
+      <TextField fx:id="latitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeDegrees" promptText="°" style="-fx-border-color: black;">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <TextField fx:id="latitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="178.0" prefHeight="25.0" prefWidth="70.0" promptText="'">
+      <TextField fx:id="latitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeMinutes" prefHeight="25.0" prefWidth="70.0" promptText="'" style="-fx-border-color: black;">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Button fx:id="continueButton" alignment="CENTER" layoutX="224.0" layoutY="311.0" mnemonicParsing="false" onAction="#getData" prefHeight="46.0" prefWidth="94.0" style="-fx-background-radius: 11;" text="Add">
+      <Button fx:id="continueButton" alignment="CENTER" layoutX="224.0" layoutY="319.0" mnemonicParsing="false" onAction="#getData" prefHeight="46.0" prefWidth="94.0" style="-fx-background-radius: 11;" text="Add">
          <font>
             <Font size="22.0" />
          </font>
       </Button>
-      <TextField fx:id="eyeHeightBox" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="247.0" prefHeight="29.0" prefWidth="94.0">
+      <TextField fx:id="eyeHeightBox" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="247.0" onMouseClicked="#deErrorEyeHeight" prefHeight="29.0" prefWidth="94.0" style="-fx-border-color: black;">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="123.0" layoutY="252.0" prefHeight="20.0" prefWidth="137.0" text="Eye Height:">
+      <Label alignment="CENTER_RIGHT" layoutX="173.0" layoutY="252.0" prefHeight="22.0" prefWidth="87.0" style="-fx-border-color: black;" text="Eye Height: ">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="latitudeHemisphereBox" layoutX="436.0" layoutY="178.0" prefHeight="29.0" prefWidth="63.0" />
-      <ChoiceBox fx:id="longitudeHemisphereBox" layoutX="436.0" layoutY="211.0" prefHeight="29.0" prefWidth="63.0" />
+      <ChoiceBox fx:id="latitudeHemisphereBox" layoutX="442.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeHemisphere" prefHeight="31.0" prefWidth="63.0" style="-fx-border-color: black;" />
+      <ChoiceBox fx:id="longitudeHemisphereBox" layoutX="442.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeHemisphere" prefHeight="31.0" prefWidth="63.0" style="-fx-border-color: black;" />
+      <Label fx:id="errorLabel" layoutX="231.0" layoutY="286.0" text="Invalid input" textFill="RED" visible="false">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
