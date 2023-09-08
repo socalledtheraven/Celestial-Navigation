@@ -14,6 +14,8 @@ public class StarAddController {
 	@FXML
 	private RadioButton indexCorrOn;
 	@FXML
+	private RadioButton indexCorrOff;
+	@FXML
 	private Button continueButton;
 	@FXML
 	private TextField angularHeightDegrees;
@@ -40,9 +42,6 @@ public class StarAddController {
 			starDropdown.setStyle("-fx-border-color: red");
 			return;
 		}
-
-		String angularHeight =
-				angularHeightDegrees.getText() + "° " + angularHeightMinutes.getText() + "'";
 
 		if (angularHeightDegrees.getText().isEmpty()) {
 			errorLabel.setVisible(true);
@@ -74,11 +73,21 @@ public class StarAddController {
 			return;
 		}
 
-		String indexCorrection = indexCorr.getText() + "°";
+		String angularHeight =
+				angularHeightDegrees.getText() + "° " + angularHeightMinutes.getText() + "'";
 
 		if (indexCorr.getText().isEmpty()) {
 			errorLabel.setVisible(true);
 			indexCorr.setStyle("-fx-border-color: red");
+			return;
+		}
+
+		String indexCorrection = indexCorr.getText() + "°";
+
+
+		if (!(indexCorrOn.isPressed()) && !(indexCorrOff.isPressed())) {
+			errorLabel.setVisible(true);
+			indexCorrOn.setStyle("-fx-border-color: red");
 			return;
 		}
 
@@ -92,28 +101,35 @@ public class StarAddController {
 	public void deErrorStar() {
 		if (starDropdown.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			starDropdown.setStyle("-fx-border-color: black");
+			starDropdown.setStyle(null);
 		}
 	}
 
 	public void deErrorDegrees() {
 		if (angularHeightDegrees.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			angularHeightDegrees.setStyle("-fx-border-color: black");
+			angularHeightDegrees.setStyle(null);
 		}
 	}
 
 	public void deErrorMinutes() {
 		if (angularHeightMinutes.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			angularHeightMinutes.setStyle("-fx-border-color: black");
+			angularHeightMinutes.setStyle(null);
 		}
 	}
 
 	public void deErrorIndexCorr() {
 		if (indexCorr.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			indexCorr.setStyle("-fx-border-color: black");
+			indexCorr.setStyle(null);
+		}
+	}
+
+	public void deErrorIndexCorrOn() {
+		if (indexCorrOn.getStyle().equals("-fx-border-color: red")) {
+			errorLabel.setVisible(false);
+			indexCorrOn.setStyle(null);
 		}
 	}
 

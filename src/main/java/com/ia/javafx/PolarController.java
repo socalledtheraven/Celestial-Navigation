@@ -222,7 +222,9 @@ public class PolarController {
 		double finalLon = (60*(intersectionPoint.getX() - 320))/ LONRATIO / CIRCLERADIUS;
 		double finalLat = (intersectionPoint.getY() - 240)*60/ CIRCLERADIUS;
 
-		Alert a = new Alert(Alert.AlertType.INFORMATION, "You are at " + finalLat + "° , " + finalLon + "°",
+		Alert a = new Alert(Alert.AlertType.INFORMATION,
+				"You are at " + Utilities.round(finalLat, 2) + "° , " + Utilities.round(finalLon, 2) +
+				"°",
 				ButtonType.OK);
 		a.show();
 	}

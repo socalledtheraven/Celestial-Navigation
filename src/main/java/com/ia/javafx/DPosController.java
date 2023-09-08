@@ -132,49 +132,49 @@ public class DPosController {
 	public void deErrorLatitudeDegrees() {
 		if (latitudeDegrees.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			latitudeDegrees.setStyle("-fx-border-color: black");
+			latitudeDegrees.setStyle(null);
 		}
 	}
 
 	public void deErrorLatitudeMinutes() {
 		if (latitudeMinutes.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			latitudeMinutes.setStyle("-fx-border-color: black");
+			latitudeMinutes.setStyle(null);
 		}
 	}
 
 	public void deErrorLatitudeHemisphere() {
 		if (latitudeHemisphereBox.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			latitudeHemisphereBox.setStyle("-fx-border-color: black");
+			latitudeHemisphereBox.setStyle(null);
 		}
 	}
 
 	public void deErrorLongitudeDegrees() {
 		if (longitudeDegrees.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			longitudeDegrees.setStyle("-fx-border-color: black");
+			longitudeDegrees.setStyle(null);
 		}
 	}
 
 	public void deErrorLongitudeMinutes() {
 		if (longitudeMinutes.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			longitudeMinutes.setStyle("-fx-border-color: black");
+			longitudeMinutes.setStyle(null);
 		}
 	}
 
 	public void deErrorLongitudeHemisphere() {
 		if (longitudeHemisphereBox.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			longitudeHemisphereBox.setStyle("-fx-border-color: black");
+			longitudeHemisphereBox.setStyle(null);
 		}
 	}
 
 	public void deErrorEyeHeight() {
 		if (eyeHeightBox.getStyle().equals("-fx-border-color: red")) {
 			errorLabel.setVisible(false);
-			eyeHeightBox.setStyle("-fx-border-color: black");
+			eyeHeightBox.setStyle(null);
 		}
 	}
 

@@ -14,27 +14,27 @@
             <Font size="42.0" />
          </font>
       </Label>
-      <TextField fx:id="longitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeDegrees" promptText="°" style="-fx-border-color: black;">
+      <TextField fx:id="longitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeDegrees" promptText="°">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="183.0" prefHeight="22.0" prefWidth="145.0" style="-fx-border-color: black;" text="Dead Reckoning Lat: ">
+      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="183.0" prefHeight="22.0" prefWidth="145.0" text="Dead Reckoning Lat: ">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="longitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeMinutes" prefHeight="25.0" prefWidth="70.0" promptText="'" style="-fx-border-color: black;">
+      <TextField fx:id="longitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeMinutes" prefHeight="25.0" prefWidth="70.0" promptText="'">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="216.0" prefHeight="22.0" prefWidth="145.0" style="-fx-border-color: black;" text="Dead Reckoning Lon: ">
+      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="216.0" prefHeight="22.0" prefWidth="145.0" text="Dead Reckoning Lon: ">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="latitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeDegrees" promptText="°" style="-fx-border-color: black;">
+      <TextField fx:id="latitudeDegrees" alignment="CENTER_RIGHT" layoutX="193.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeDegrees" promptText="°">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <TextField fx:id="latitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeMinutes" prefHeight="25.0" prefWidth="70.0" promptText="'" style="-fx-border-color: black;">
+      <TextField fx:id="latitudeMinutes" alignment="CENTER_RIGHT" layoutX="366.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeMinutes" prefHeight="25.0" prefWidth="70.0" promptText="'">
          <font>
             <Font size="14.0" />
          </font></TextField>
@@ -43,18 +43,18 @@
             <Font size="22.0" />
          </font>
       </Button>
-      <TextField fx:id="eyeHeightBox" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="247.0" onMouseClicked="#deErrorEyeHeight" prefHeight="29.0" prefWidth="94.0" style="-fx-border-color: black;">
+      <TextField fx:id="eyeHeightBox" alignment="CENTER_RIGHT" layoutX="265.0" layoutY="247.0" onMouseClicked="#deErrorEyeHeight" prefHeight="29.0" prefWidth="94.0">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <Label alignment="CENTER_RIGHT" layoutX="173.0" layoutY="252.0" prefHeight="22.0" prefWidth="87.0" style="-fx-border-color: black;" text="Eye Height: ">
+      <Label alignment="CENTER_RIGHT" layoutX="173.0" layoutY="252.0" prefHeight="22.0" prefWidth="87.0" text="Eye Height: ">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="latitudeHemisphereBox" layoutX="442.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeHemisphere" prefHeight="31.0" prefWidth="63.0" style="-fx-border-color: black;" />
-      <ChoiceBox fx:id="longitudeHemisphereBox" layoutX="442.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeHemisphere" prefHeight="31.0" prefWidth="63.0" style="-fx-border-color: black;" />
+      <ChoiceBox fx:id="latitudeHemisphereBox" layoutX="442.0" layoutY="178.0" onMouseClicked="#deErrorLatitudeHemisphere" prefHeight="31.0" prefWidth="63.0" />
+      <ChoiceBox fx:id="longitudeHemisphereBox" layoutX="442.0" layoutY="211.0" onMouseClicked="#deErrorLongitudeHemisphere" prefHeight="31.0" prefWidth="63.0" />
       <Label fx:id="errorLabel" layoutX="231.0" layoutY="286.0" text="Invalid input" textFill="RED" visible="false">
          <font>
             <Font size="16.0" />
