@@ -58,13 +58,13 @@ public class FileHandler {
         for (int i = 0; i < numStars; i++) {
             // since each block is 5 lines long, we use 5i plus an offset
             star = lines.get((5*i)+1).replace("    ", "").split(":")[1].replace(",", "").strip();
-            aVal = new AValue(lines.get((5*i)+2).replace("    ", "").split(":")[1].replace(",", "").strip());
+            aVal = new AValue(lines.get((5*i)+2).replace("    ", "").replace("Â", "").split(":")[1].replace(",", "").strip());
             azimuth =
-                    new Degree(lines.get((5*i)+3).replace("    ", "").split(":")[1].replace(",", "").strip());
+                    new Degree(lines.get((5*i)+3).replace("    ", "").replace("Â", "").split(":")[1].replace(",", "").strip());
             aLat =
-                    new Latitude(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[0].split(":")[1]);
+                    new Latitude(lines.get((5*i)+4).replace("    ", "").replace("Â", "").split("=")[1].split(",")[0].split(":")[1]);
             aLon =
-                    new Longitude(lines.get((5*i)+4).replace("    ", "").split("=")[1].split(",")[1].replace(",", "").split(":")[1]);
+                    new Longitude(lines.get((5*i)+4).replace("    ", "").replace("Â", "").split("=")[1].split(",")[1].replace(",", "").split(":")[1]);
             plots.add(new Plot(star, aLat, aLon, aVal, azimuth));
         }
 
@@ -225,7 +225,7 @@ public class FileHandler {
                 // this whole section (and the next if statement) is for the stupid asf sections where occasionally 2
                 // parts are on one line for no reason and I have to allow for that even though I'm doing
                 // autoindexing >:(
-                if (nextLine.equals("")) {
+                if (nextLine.isEmpty()) {
                     line =
                             scanner.nextLine().strip().replace("'", "").replace("←", "").replace(" See table", "").replace(" meters", "").replace("         ", " ").replace("       ", " ").replace("  ", " ");
                 } else {
@@ -239,7 +239,7 @@ public class FileHandler {
                     nextLine = lines[1];
                 }
 
-                // every other line has corrections vs apparent altitudes
+                // every _other_ line has corrections vs apparent altitudes
                 if (counter % 2 == 0) {
                     line = formatDecimalPoints(line);
                     apparentAltitudes[108+(counter/2)] = Double.parseDouble(line.split(" ")[2]);
@@ -284,11 +284,11 @@ public class FileHandler {
         return parts[2];
     }
 
-    private static String formatDecimalPoints(String stringToChange) {
+    private static String formatDecimalPoints(String s) {
         // a function that adds a decimal point in certain places where it's needed
-        final String separator = "#######";
-        String splittingString = stringToChange.replaceAll(" ", separator + " ");
-        String[] splitArray = splittingString.split(separator);
+        String separator = "#######";
+        s = s.replaceAll(" ", separator + " ");
+        String[] splitArray = s.split(separator);
         String result = "";
         for (int i = 0; i < splitArray.length; i++) {
             if ((i % 2 == 1) && (i < 7)) {

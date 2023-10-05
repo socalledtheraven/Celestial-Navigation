@@ -70,7 +70,8 @@ public class AssumedPosition {
 
         // uses standard azimuth formula
         double Zn =
-                Utilities.acos((Utilities.sin(dec) - Utilities.sin(alat) * Utilities.sin(expectedHeight)) / (Utilities.cos(alat) * Utilities.cos(expectedHeight)));
+                Utilities.acos((Utilities.sin(dec) - Utilities.sin(alat) * Utilities.sin(expectedHeight)) /
+                        (Utilities.cos(alat) * Utilities.cos(expectedHeight)));
 
         // deals with north/south hemisphere differences
         double Z;

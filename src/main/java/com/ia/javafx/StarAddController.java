@@ -80,12 +80,16 @@ public class StarAddController {
 			errorLabel.setVisible(true);
 			indexCorr.setStyle("-fx-border-color: red");
 			return;
+		} else if (!(indexCorr.getText().matches("^[0-9]+$")) || indexCorr.getText().contains(" ")) {
+			errorLabel.setVisible(true);
+			indexCorr.setStyle("-fx-border-color: red");
+			return;
 		}
 
 		String indexCorrection = indexCorr.getText() + "°";
 
 
-		if (!(indexCorrOn.isPressed()) && !(indexCorrOff.isPressed())) {
+		if (!(indexCorrOn.isSelected()) && !(indexCorrOff.isSelected())) {
 			errorLabel.setVisible(true);
 			indexCorrOn.setStyle("-fx-border-color: red");
 			return;

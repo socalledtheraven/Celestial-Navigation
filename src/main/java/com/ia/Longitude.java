@@ -2,6 +2,7 @@ package com.ia;
 
 public class Longitude extends Degree {
     private Direction direction;
+
     public Longitude(int degrees, double minutes) {
         super(degrees, minutes);
     }

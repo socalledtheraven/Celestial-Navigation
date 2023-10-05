@@ -94,23 +94,31 @@ public class MainScreenController {
 	public void loadFix() throws IOException {
 		FileChooser fileChooser = new FileChooser();
 		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
-		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
-		ArrayList<String> s = new ArrayList<>();
+		if (f.getName().contains(".fix")) {
+			ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
+			ArrayList<String> s = new ArrayList<>();
 
-		AValue[] a = new AValue[fixes.size()];
-		Degree[] az = new Degree[fixes.size()];
-		Latitude[] alat = new Latitude[fixes.size()];
-		Longitude[] alon = new Longitude[fixes.size()];
+			AValue[] a = new AValue[fixes.size()];
+			Degree[] az = new Degree[fixes.size()];
+			Latitude[] alat = new Latitude[fixes.size()];
+			Longitude[] alon = new Longitude[fixes.size()];
 
-		for (int i = 0; i < fixes.size(); i++) {
-			s.add(i, fixes.get(i).getStar());
-			a[i] = fixes.get(i).getAValue();
-			az[i] = fixes.get(i).getAzimuth();
-			alat[i] = fixes.get(i).getAssumedLatitude();
-			alon[i] = fixes.get(i).getAssumedLongitude();
+			for (int i = 0; i < fixes.size(); i++) {
+				s.add(i, fixes.get(i).getStar());
+				a[i] = fixes.get(i).getAValue();
+				az[i] = fixes.get(i).getAzimuth();
+				alat[i] = fixes.get(i).getAssumedLatitude();
+				alon[i] = fixes.get(i).getAssumedLongitude();
+			}
+
+			switchToFinalDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Invalid File");
+			alert.setContentText("Please select a .fix file");
+			alert.showAndWait();
 		}
-
-		switchToFinalDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
 	}
 
 	public void addStarDisplay(String star, String angularHeight, String indexCorrection, boolean indexCorrectionOn) {

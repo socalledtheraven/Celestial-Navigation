@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -47,24 +48,33 @@ public class FinalFixDisplayController {
 		fileChooser.setTitle("Open fix file");
 		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
 
-		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
-		ArrayList<String> s = new ArrayList<>();
-		AValue[] a = new AValue[fixes.size()];
-		Degree[] az = new Degree[fixes.size()];
-		Latitude[] alat = new Latitude[fixes.size()];
-		Longitude[] alon = new Longitude[fixes.size()];
+		if (f.getName().contains(".fix")) {
+			ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
+			ArrayList<String> s = new ArrayList<>();
 
-		for (int i = 0; i < fixes.size(); i++) {
-			s.add(i, fixes.get(i).getStar());
-			a[i] = fixes.get(i).getAValue();
-			az[i] = fixes.get(i).getAzimuth();
-			alat[i] = fixes.get(i).getAssumedLatitude();
-			alon[i] = fixes.get(i).getAssumedLongitude();
+			AValue[] a = new AValue[fixes.size()];
+			Degree[] az = new Degree[fixes.size()];
+			Latitude[] alat = new Latitude[fixes.size()];
+			Longitude[] alon = new Longitude[fixes.size()];
+
+			for (int i = 0; i < fixes.size(); i++) {
+				s.add(i, fixes.get(i).getStar());
+				a[i] = fixes.get(i).getAValue();
+				az[i] = fixes.get(i).getAzimuth();
+				alat[i] = fixes.get(i).getAssumedLatitude();
+				alon[i] = fixes.get(i).getAssumedLongitude();
+			}
+
+			// clear the existing stars or they'll overlap and look bad
+			removeStarDisplay();
+			addStarDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Invalid File");
+			alert.setContentText("Please select a .fix file");
+			alert.showAndWait();
 		}
-
-		// clear the existing stars or they'll overlap and look bad
-		removeStarDisplay();
-		addStarDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
 	}
 
 	public void saveFixes() {
@@ -240,7 +250,7 @@ public class FinalFixDisplayController {
 		FileHandler.savePlot(p, tempPath + now.toInstant(ZoneOffset.UTC).toEpochMilli());
 	}
 
-	public void switchToPlotScreen() throws IOException {
+	public void switchToPlotScreen() throws IOException, InterruptedException {
 		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("plotScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		PolarController controller = (PolarController) fxmlLoader.getController();

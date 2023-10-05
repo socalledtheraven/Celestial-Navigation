@@ -54,39 +54,47 @@ public class PolarController {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open fix file");
 		File f = fileChooser.showOpenDialog(loadFixButton.getScene().getWindow());
-		ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
-		ArrayList<String> s = new ArrayList<>();
+		if (f.getName().contains(".fix")) {
+			ArrayList<Plot> fixes = FileHandler.loadPlot(f.getAbsolutePath());
+			ArrayList<String> s = new ArrayList<>();
 
-		AValue[] a = new AValue[fixes.size()];
-		Degree[] az = new Degree[fixes.size()];
-		Latitude[] alat = new Latitude[fixes.size()];
-		Longitude[] alon = new Longitude[fixes.size()];
+			AValue[] a = new AValue[fixes.size()];
+			Degree[] az = new Degree[fixes.size()];
+			Latitude[] alat = new Latitude[fixes.size()];
+			Longitude[] alon = new Longitude[fixes.size()];
 
-		for (int i = 0; i < fixes.size(); i++) {
-			s.add(i, fixes.get(i).getStar());
-			a[i] = fixes.get(i).getAValue();
-			az[i] = fixes.get(i).getAzimuth();
-			alat[i] = fixes.get(i).getAssumedLatitude();
-			alon[i] = fixes.get(i).getAssumedLongitude();
+			for (int i = 0; i < fixes.size(); i++) {
+				s.add(i, fixes.get(i).getStar());
+				a[i] = fixes.get(i).getAValue();
+				az[i] = fixes.get(i).getAzimuth();
+				alat[i] = fixes.get(i).getAssumedLatitude();
+				alon[i] = fixes.get(i).getAssumedLongitude();
+			}
+
+			// displays the data instead of plotting it right away - this is mostly because of the temp files, which will
+			// break if not properly called through addStarDisplay, so the user will get an error when clicking on the
+			// back button
+			FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
+			Parent root = fxmlLoader.load();
+			FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
+
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root));
+			stage.setTitle("Star Data Display");
+			stage.setWidth(550);
+			stage.setHeight(450);
+			stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+			stage.show();
+			pane.getScene().getWindow().hide();
+
+			controller.addStarDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
+		} else {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Invalid File");
+			alert.setContentText("Please select a .fix file");
+			alert.showAndWait();
 		}
-
-		// displays the data instead of plotting it right away - this is mostly because of the temp files, which will
-		// break if not properly called through addStarDisplay, so the user will get an error when clicking on the
-		// back button
-		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
-		Parent root = fxmlLoader.load();
-		FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
-
-		Stage stage = new Stage();
-		stage.setScene(new Scene(root));
-		stage.setTitle("Star Data Display");
-		stage.setWidth(550);
-		stage.setHeight(450);
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
-		stage.show();
-		pane.getScene().getWindow().hide();
-
-		controller.addStarDisplay(fixes.size(), s, a, az, alat, alon, new Latitude(-1));
 	}
 
 	public void saveFixes() {
@@ -176,7 +184,7 @@ public class PolarController {
 		return (((double) 2 /3)*sqrt(8100 - 2*y*y)/60);
 	}
 	
-	public void plot(int numOfStars, double DRLatitude, double[] azimuths, double[] aValues, double[] aLonDegrees) {
+	public void plot(int numOfStars, double DRLatitude, double[] azimuths, double[] aValues, double[] aLonDegrees) throws InterruptedException {
 		double LONRATIO = longitudeScale(DRLatitude);
 		double CIRCLERADIUS = compassRose.getRadius();
 
@@ -223,9 +231,11 @@ public class PolarController {
 		double finalLat = (intersectionPoint.getY() - 240)*60/ CIRCLERADIUS;
 
 		Alert a = new Alert(Alert.AlertType.INFORMATION,
-				"You are at " + Utilities.round(finalLat, 2) + "° , " + Utilities.round(finalLon, 2) +
+				"You are at " + Utilities.round(finalLat, 2) + "°, " + Utilities.round(finalLon, 2) +
 				"°",
 				ButtonType.OK);
+		Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
 		a.show();
 	}
 
