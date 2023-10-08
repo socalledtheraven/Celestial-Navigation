@@ -6,7 +6,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.util.List;
-import java.util.Objects;
 
 public class StarAddController {
 	@FXML

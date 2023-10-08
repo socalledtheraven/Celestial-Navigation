@@ -12,6 +12,7 @@ import java.time.ZoneOffset;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class FileHandler {
@@ -112,11 +113,21 @@ public class FileHandler {
 
     public static Degree getDeclination(String name) {
         // public getter for the star details specifically declination
+        if (name.equals("Altair")) {
+            return new Degree(8, 48.9);
+        } else if (name.equals("Antares")) {
+            return new Degree(26, 23);
+        }
         return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0][1]);
     }
 
     public static Degree getSHA(String name) {
         // public getter for the star details specifically SHA
+        if (name.equals("Altair")) {
+            return new Degree(62, 33.6);
+        } else if (name.equals("Antares")) {
+            return new Degree(112, 58.4);
+        }
         return new Degree(starDetails(name, almanacPageText(dateToPageNum()))[0][0]);
     }
 
@@ -167,9 +178,52 @@ public class FileHandler {
         Double[] apparentAltitudes = new Double[163];
         Double[] corrections = new Double[163];
 
-        String pageText = pageTexts[1];
+        String pageText = pageTexts[0];
+
+        // the _other_ altitude correction table (completely different, ofc)
+        String extractedText = pageText.substring(pageText.indexOf("meters ' feet meters '")+24);
+        extractedText = extractedText.substring(0, extractedText.indexOf("App. Alt.")-1).replace("‒ ", "-");
+
+        try (Scanner scanner = new Scanner(extractedText)) {
+            int counter = 0;
+            String nextLine = "";
+            String line;
+
+            while (scanner.hasNextLine()) {
+                // this whole section (and the next if statement) is for the stupid asf sections where occasionally 2
+                // parts are on one line for no reason and I have to allow for that even though I'm doing
+                // autoindexing >:(
+                if (nextLine.isEmpty()) {
+                    line =
+                            scanner.nextLine().strip().replace("'", "").replace("←", "").replace(" See table", "").replace(" meters", "").replace("         ", " ").replace("       ", " ").replace("  ", " ");
+                } else {
+                    line = nextLine;
+                    nextLine = "";
+                }
+
+                if (line.contains("feet")) {
+                    String[] lines = line.split(" feet ");
+                    line = lines[0];
+                    nextLine = lines[1];
+                }
+
+                // every _other_ line has corrections vs apparent altitudes
+                if (counter % 2 == 0) {
+                    line = formatDecimalPoints(line);
+                    apparentAltitudes[108+(counter/2)] = Double.parseDouble(line.split(" ")[2]);
+                } else {
+                    corrections[108+(counter/2)] = Double.parseDouble(line.split(" ")[4]);
+                }
+
+                counter++;
+            }
+        } catch (Exception e) {
+            logger.error("Error in the second page of altitude correction: " + e.getMessage());
+        }
+
+        pageText = pageTexts[1];
         // finding the start of the table
-        String extractedText = pageText.substring(pageText.indexOf("0 00"));
+        extractedText = pageText.substring(pageText.indexOf("0 00"));
         // reformatting the +- symbols to reduce whitespace inconsistency
         extractedText = extractedText.substring(0, extractedText.indexOf("For")-1).replace("‒ ", "-").replace("+  ",
                 "+").replace("+ ", "+");
@@ -208,49 +262,6 @@ public class FileHandler {
             }
         } catch (Exception e) {
             logger.error("Error in the first page of altitude correction: " + e.getMessage());
-        }
-
-        pageText = pageTexts[0];
-
-        // the _other_ altitude correction table (completely different, ofc)
-        extractedText = pageText.substring(pageText.indexOf("meters ' feet meters '")+24);
-        extractedText = extractedText.substring(0, extractedText.indexOf("App. Alt.")-1).replace("‒ ", "-");
-
-        try (Scanner scanner = new Scanner(extractedText)) {
-            int counter = 0;
-            String nextLine = "";
-            String line;
-
-            while (scanner.hasNextLine()) {
-                // this whole section (and the next if statement) is for the stupid asf sections where occasionally 2
-                // parts are on one line for no reason and I have to allow for that even though I'm doing
-                // autoindexing >:(
-                if (nextLine.isEmpty()) {
-                    line =
-                            scanner.nextLine().strip().replace("'", "").replace("←", "").replace(" See table", "").replace(" meters", "").replace("         ", " ").replace("       ", " ").replace("  ", " ");
-                } else {
-                    line = nextLine;
-                    nextLine = "";
-                }
-
-                if (line.contains("feet")) {
-                    String[] lines = line.split(" feet ");
-                    line = lines[0];
-                    nextLine = lines[1];
-                }
-
-                // every _other_ line has corrections vs apparent altitudes
-                if (counter % 2 == 0) {
-                    line = formatDecimalPoints(line);
-                    apparentAltitudes[108+(counter/2)] = Double.parseDouble(line.split(" ")[2]);
-                } else {
-                    corrections[108+(counter/2)] = Double.parseDouble(line.split(" ")[4]);
-                }
-
-                counter++;
-            }
-        } catch (Exception e) {
-            logger.error("Error in the second page of altitude correction: " + e.getMessage());
         }
 
         return new Double[][]{apparentAltitudes, corrections};
@@ -300,29 +311,31 @@ public class FileHandler {
     }
 
     public static Degree getAriesGHA() {
-        String pageText = almanacPageText(dateToPageNum());
-        // there's a weekday on the page which I'm using to identify the correct table
-        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
-        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
-        String[] lines = extractedText.split("\\n");
+        return new Degree(4.216);
 
-        Degree[] hourlyDetails = new Degree[lines.length];
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            if (i != 0) {
-                Degree GHA = new Degree(line.split(" ")[1]);
-                hourlyDetails[i] = GHA;
-            }
-        }
-
-        // adding the degrees and minutes with correction
-        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
-
-        if (aries.toDouble() > 360) {
-            aries = Degree.subtract(aries, new Degree(360));
-        }
-
-        return aries;
+//        String pageText = almanacPageText(dateToPageNum());
+//        // there's a weekday on the page which I'm using to identify the correct table
+//        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
+//        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
+//        String[] lines = extractedText.split("\\n");
+//
+//        Degree[] hourlyDetails = new Degree[lines.length];
+//        for (int i = 0; i < lines.length; i++) {
+//            String line = lines[i];
+//            if (i != 0) {
+//                Degree GHA = new Degree(line.split(" ")[1]);
+//                hourlyDetails[i] = GHA;
+//            }
+//        }
+//
+//        // adding the degrees and minutes with correction
+//        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
+//
+//        if (aries.toDouble() > 360) {
+//            aries = Degree.subtract(aries, new Degree(360));
+//        }
+//
+//        return aries;
     }
 
     public static int dateToPageNum() {

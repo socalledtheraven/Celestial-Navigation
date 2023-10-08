@@ -45,9 +45,15 @@ public class Degree {
     }
 
     public Degree(double doubleDegree) {
+        int d;
         // takes whole numbers for degrees and decimal parts for minutes
-        this.degrees = (int) Math.floor(doubleDegree);
-        this.minutes = 100 * (Utilities.round(doubleDegree - this.degrees, 2));
+        d = (int) Math.floor(doubleDegree);
+        minutes = 100 * (Utilities.round(doubleDegree - d, 3));
+        while (minutes > 60) {
+            minutes -= 60;
+            d++;
+        }
+        degrees = d;
     }
 
     @Override

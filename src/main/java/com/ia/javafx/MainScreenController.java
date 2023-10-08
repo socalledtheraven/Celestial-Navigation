@@ -155,10 +155,11 @@ public class MainScreenController {
 
 		pane.getChildren().add(angularHeightLabel);
 
+		double indexCorr = Double.parseDouble(indexCorrection.replace("°", ""))/100;
 		if (firstStarSet) {
-			indexCorrections.add(new Degree(indexCorrection));
+			indexCorrections.add(new Degree(indexCorr));
 		} else {
-			indexCorrections.set(starsNum, new Degree(indexCorrection));
+			indexCorrections.set(starsNum, new Degree(indexCorr));
 		}
 		Label indexCorrectionLabel = new Label(indexCorrection);
 		indexCorrectionLabel.setFont(new Font("System", 21));
@@ -261,7 +262,8 @@ public class MainScreenController {
 			assumedLatitudes[i] = ap.getAssumedLatitude();
 			assumedLongitudes[i] = ap.getAssumedLongitude();
 
-			StarSight st = new StarSight(angularHeights.get(i), indexCorrections.get(i), indexCorrectionOnValues.get(i), eyeHeight);
+			StarSight st = new StarSight(angularHeights.get(i), indexCorrections.get(i),
+					indexCorrectionOnValues.get(i), eyeHeight, stars.get(i));
 			Degree Ho = st.getObservedHeight();
 			double Hc = ap.getExpectedHeight();
 			AValue a = new AValue(Hc, Ho);

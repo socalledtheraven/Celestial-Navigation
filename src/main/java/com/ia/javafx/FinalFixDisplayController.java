@@ -257,15 +257,13 @@ public class FinalFixDisplayController {
 		int numStars = s.size();
 		double[] azimuths = new double[numStars];
 		double[] aValues = new double[numStars];
-		double[] aLonDeg = new double[numStars];
 
 		for (int i = 0; i < numStars; i++) {
 			azimuths[i] = az[i].toDouble();
-			aValues[i] = a[i].toDouble();
-			aLonDeg[i] = alon[i].getDegrees();
+			aValues[i] = a[i].toDouble() * 100;
 		}
 
-		controller.plot(numStars, drlat.toDouble(), azimuths, aValues, aLonDeg);
+		controller.plot(numStars, alat[0].toDouble(), azimuths, aValues, alon);
 
 		Stage stage = new Stage();
 		stage.setScene(new Scene(root));

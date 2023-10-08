@@ -4,10 +4,11 @@ public class AValue {
     private final Degree value;
     private final Towards towards;
     public AValue(double Hc, Degree Ho) {
-        super();
         // calculates the difference between Hc and Ho (ie the difference between the sight at the Assumed position
         // and the sight at the real position) so the distance between the two
-        if (Hc > Ho.getMinutes()) {
+        System.out.println("Hc: " + Hc);
+        System.out.println("Ho: " + Ho);
+        if (Hc > Ho.toDouble()) {
             towards = Towards.AWAY;
             value = new Degree(Hc - Ho.toDouble());
         } else {

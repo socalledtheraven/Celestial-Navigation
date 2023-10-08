@@ -31,20 +31,20 @@ public class PolarController {
 	private static final Logger logger = LogManager.getLogger();
 	@FXML
 	private Pane pane;
-    @FXML
-    private Label topLabel;
 	@FXML
-	private Line topLine;
-    @FXML
-    private Label midLabel;
+	private Label topLabel;
 	@FXML
-	private Line midLine;
-    @FXML
-    private Label bottomLabel;
+	private Label leftLonLabel;
 	@FXML
-	private Line bottomLine;
-    @FXML
-    private Circle compassRose;
+	private Label midLabel;
+	@FXML
+	private Label midLonLabel;
+	@FXML
+	private Label bottomLabel;
+	@FXML
+	private Label rightLonLabel;
+	@FXML
+	private Circle compassRose;
 	@FXML
 	private Button loadFixButton;
 	@FXML
@@ -116,12 +116,20 @@ public class PolarController {
 		}
 	}
 
-    protected void setLabels(double longitude) {
+    protected void setLabels(double latitude, double longitude) {
 		// called at the start to make the labels correct
-		topLabel.setText((longitude+1) + "°");
-        midLabel.setText(longitude + "°");
-        bottomLabel.setText((longitude-1) + "°");
+		topLabel.setText((latitude+1) + "°");
+        midLabel.setText(latitude + "°");
+        bottomLabel.setText((latitude-1) + "°");
+		leftLonLabel.setText((longitude+1) + "°");
+	    midLonLabel.setText(longitude + "°");
+	    rightLonLabel.setText((longitude-1) + "°");
     }
+
+	protected Line line(Point p, double angle) {
+		Point point = new Point(compassRose.getRadius(), new Degree(angle));
+		return new Line(p.getX(), p.getY(), p.getX()+point.getX(), p.getY()+point.getY());
+	}
 
     protected Point circleCentre() {
         return new Point(compassRose.getLayoutX(), compassRose.getLayoutY());
@@ -130,7 +138,7 @@ public class PolarController {
 	protected Line extendLine(Line line) {
 		// extends a line both for display purposes and because default [Line]s are more vectors, so finding
 		// intercepts is pain
-		double extensionRatio = (double) 1 /5;
+		double extensionRatio = (double) 1/5;
 		line.setStartX(line.getStartX() - (extensionRatio*(line.getEndX()-line.getStartX())));
 		line.setEndX(line.getEndX() + (extensionRatio*(line.getEndX()-line.getStartX())));
 		line.setStartY(line.getStartY() - (extensionRatio*(line.getEndY()-line.getStartY())));
@@ -160,59 +168,59 @@ public class PolarController {
 		pane.getChildren().add(line);
 	}
 
-	protected double drawLongitudeLines(Latitude DRLatitude) {
-		// finds the correct x and then draws a line from the top line to the middle, and the modified line from
-		// middle to bottom
-		DRLatitude = new Latitude(Degree.subtract(new Degree(90), DRLatitude).getDegrees());
-		Point upperLinePoint = new Point(compassRose.getRadius(), DRLatitude);
-		Point lowerLinePoint = new Point(compassRose.getRadius(), Degree.add(DRLatitude,
-				new Degree(1)));
-
-		double topPoint = circleCentre().getX() + upperLinePoint.getX();
-		double lowerPoint = circleCentre().getX() + lowerLinePoint.getX();
-		Line upperLine = new Line(topPoint, topLine.getLayoutY(), topPoint, midLine.getLayoutY());
-		Line lowerLine = new Line(lowerPoint, midLine.getLayoutY(), lowerPoint, bottomLine.getLayoutY());
-
-		pane.getChildren().add(upperLine);
-		pane.getChildren().add(lowerLine);
-		return topPoint-320;
+	protected double longitudeScale(double lat, double lonMins) {
+		// the accounting for the fact that the earth is a sphere and longitudes aren't consistent across that
+		// divide by 90 to get distance/minute
+		return (sqrt(8100 - 2*lat*lat)/90) * lonMins;
 	}
 
-	protected double longitudeScale(double y) {
-		// the accounting for the fact that the earth is a sphere and longitudes aren't consistent across that
-		// circle radius is 90, but we need it to match with the 60 degrees compass rose circle
-		return (((double) 2 /3)*sqrt(8100 - 2*y*y)/60);
+	protected double reverseLongitudeScale(double lat, double length) {
+		return length / (sqrt(8100 - 2*lat*lat)/90);
+	}
+
+	protected void plotLine(Point p) {
+		// useful for debugging and displaying polar coordinates
+		Point centre = circleCentre();
+		Line line = new Line(centre.getX(), centre.getY(),
+				320+p.getX(), 240+p.getY());
+		line.setStrokeWidth(2);
+		line.setStroke(Color.BLUE);
+		pane.getChildren().add(line);
 	}
 	
-	public void plot(int numOfStars, double DRLatitude, double[] azimuths, double[] aValues, double[] aLonDegrees) throws InterruptedException {
-		double LONRATIO = longitudeScale(DRLatitude);
-		double CIRCLERADIUS = compassRose.getRadius();
+	public void plot(int numOfStars, double aLat, double[] azimuths, double[] aValues, Degree[] aLons) {
+		final double CIRCLERADIUS = compassRose.getRadius();
+		final double LATRATIO = CIRCLERADIUS/60;
 
-		double[] lonPoints = new double[numOfStars];
+		int smallest = 361;
+		for (int i = 0; i < numOfStars; i++) {
+			if (aLons[i].getDegrees() < smallest) {
+				smallest = aLons[i].getDegrees();
+			}
+		}
+		setLabels(aLat, smallest+1);
+
 		Point[] assumedLongitudePoints = new Point[numOfStars];
-		Point[] azimuthPoints = new Point[numOfStars];
 		Line[] azimuthLines = new Line[numOfStars];
 		Point[] interceptPoints = new Point[numOfStars];
-		Point[] degreePoints = new Point[numOfStars];
 		Line[] linesOfPosition = new Line[numOfStars];
 
 		for (int i = 0; i < numOfStars; i++) {
-			setLabels(DRLatitude);
-			lonPoints[i] = drawLongitudeLines(new Latitude((int) DRLatitude));
-
 			// locates and draws the point of assumed longitude
 			// divides by 60 bc degrees vs minutes, * by lonratio and circle radius to make sure it's the correct length
-			assumedLongitudePoints[i] = new Point(lonPoints[i]-((aLonDegrees[i]/60)* LONRATIO * CIRCLERADIUS),
-					new Degree(90));
-			logger.info("Number " + i + " alon is " + assumedLongitudePoints[i]);
-			azimuthPoints[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]));
-			azimuthLines[i] = extendLine(new Line(azimuthPoints[i].getX(), azimuthPoints[i].getY(), assumedLongitudePoints[i].getX(), assumedLongitudePoints[i].getY()));
+			if (aLons[i].getDegrees() < smallest+1) {
+				assumedLongitudePoints[i] = new Point((rightLonLabel.getLayoutX()-320) - (LATRATIO * longitudeScale(aLat,
+						aLons[i].getMinutes())), 0);
+			} else {
+				assumedLongitudePoints[i] = new Point((midLonLabel.getLayoutX()-320) - (LATRATIO * longitudeScale(aLat,
+						aLons[i].getMinutes())), 0);
+			}
+			azimuthLines[i] = extendLine(line(assumedLongitudePoints[i], azimuths[i]));
 
-			interceptPoints[i] = getIntercept(azimuthLines[i], (aValues[i]/60)* LONRATIO * CIRCLERADIUS, assumedLongitudePoints[i]);
-			logger.info("Number " + i + " intercept is " + interceptPoints[i]);
-			degreePoints[i] = new Point(CIRCLERADIUS, new Degree(azimuths[i]-270));
-			linesOfPosition[i] = extendLine(new Line(degreePoints[i].getX(), degreePoints[i].getY(), interceptPoints[i].getX(),
-					interceptPoints[i].getY()));
+			interceptPoints[i] = getIntercept(azimuthLines[i], aValues[i]*LATRATIO, assumedLongitudePoints[i]);
+			plotLine(interceptPoints[i]);
+			System.out.println("Number " + (i+1) + " intercept is " + interceptPoints[i]);
+			linesOfPosition[i] = extendLine(line(interceptPoints[i],azimuths[i]+270));
 			linesOfPosition[i].setStroke(Color.RED);
 			linesOfPosition[i].setStrokeWidth(2);
 		}
@@ -223,12 +231,19 @@ public class PolarController {
 		}
 
 		// as mentioned inside, we only use 2 lines
-		Point intersectionPoint = MathematicalLine.getIntercept(new MathematicalLine(azimuthLines[0]),
-				new MathematicalLine(azimuthLines[1]));
+		Point intersectionPoint = MathematicalLine.getIntercept(new MathematicalLine(linesOfPosition[0]),
+				new MathematicalLine(linesOfPosition[1]));
 		logger.info("Intersection point is " + intersectionPoint);
 
-		double finalLon = (60*(intersectionPoint.getX() - 320))/ LONRATIO / CIRCLERADIUS;
-		double finalLat = (intersectionPoint.getY() - 240)*60/ CIRCLERADIUS;
+		double finalLon;
+		if (intersectionPoint.getX() > midLonLabel.getLayoutX()) {
+			finalLon =
+					reverseLongitudeScale(aLat, rightLonLabel.getLayoutX() - intersectionPoint.getX()) / LATRATIO;
+		} else {
+			finalLon =
+					reverseLongitudeScale(aLat, midLonLabel.getLayoutX() - intersectionPoint.getX()) / LATRATIO;
+		}
+		double finalLat = (intersectionPoint.getY() - 240) / LATRATIO;
 
 		Alert a = new Alert(Alert.AlertType.INFORMATION,
 				"You are at " + Utilities.round(finalLat, 2) + "°, " + Utilities.round(finalLon, 2) +

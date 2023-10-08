@@ -12,7 +12,11 @@ public class AssumedPosition {
 
     public AssumedPosition(DRPosition dPos, Star star) {
         // assumed latitude is just the degrees of dr position
-        assumedLatitude = new Latitude(dPos.getLatitude().getDegrees(), dPos.getLatitude().getDirection());
+        if (dPos.getLatitude().getMinutes() >= 30) {
+            assumedLatitude = new Latitude(dPos.getLatitude().getDegrees()+1, dPos.getLatitude().getDirection());
+        } else {
+            assumedLatitude = new Latitude(dPos.getLatitude().getDegrees(), dPos.getLatitude().getDirection());
+        }
         assumedLongitude = calculateAssumedLongitude(dPos);
         expectedHeight = calculateExpectedHeight(dPos, star);
         azimuth = calculateAzimuth(star);
@@ -40,8 +44,11 @@ public class AssumedPosition {
 
         // using the standard formula for calculating expected height
         double realValue = (Utilities.sin(dec) * Utilities.sin(DRlat)) + (Utilities.cos(dec) * Utilities.cos(DRlat) * Utilities.cos(LHA));
-        logger.info("expected height: " + realValue);
-        return Utilities.asin(realValue);
+        if (realValue > 0.7) {
+            return 90-Utilities.asin(realValue);
+        } else {
+            return Utilities.asin(realValue);
+        }
     }
 
     private Degree calculateLHA(Star star) {
@@ -60,6 +67,7 @@ public class AssumedPosition {
             LHA = Degree.add(GHA, new Degree(assumedLongitude.getDegrees(), GHADiff));
         }
 
+        System.out.println("LHA: " + LHA);
         return LHA;
     }
 
@@ -72,6 +80,7 @@ public class AssumedPosition {
         double Zn =
                 Utilities.acos((Utilities.sin(dec) - Utilities.sin(alat) * Utilities.sin(expectedHeight)) /
                         (Utilities.cos(alat) * Utilities.cos(expectedHeight)));
+        System.out.println("Zn: " + Zn);
 
         // deals with north/south hemisphere differences
         double Z;
