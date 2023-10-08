@@ -62,7 +62,7 @@ public class DPosController {
 			return;
 		} else if (!(latitudeMinutes.getText().matches("^[0-9.]+$")) || latitudeMinutes.getText().contains(" ")) {
 			errorLabel.setVisible(true);
-			latitudeDegrees.setStyle("-fx-border-color: red");
+			latitudeMinutes.setStyle("-fx-border-color: red");
 			return;
 		} else if (Integer.parseInt(latitudeMinutes.getText()) > 60) {
 			errorLabel.setVisible(true);
@@ -85,7 +85,7 @@ public class DPosController {
 			return;
 		} else if (!(longitudeDegrees.getText().matches("^[0-9]+$")) || longitudeDegrees.getText().contains(" ")) {
 			errorLabel.setVisible(true);
-			latitudeDegrees.setStyle("-fx-border-color: red");
+			longitudeDegrees.setStyle("-fx-border-color: red");
 			return;
 		} else if (Integer.parseInt(longitudeDegrees.getText()) > 360) {
 			errorLabel.setVisible(true);
@@ -99,7 +99,7 @@ public class DPosController {
 			return;
 		} else if (!(longitudeMinutes.getText().matches("^[0-9.]+$")) || longitudeMinutes.getText().contains(" ")) {
 			errorLabel.setVisible(true);
-			latitudeDegrees.setStyle("-fx-border-color: red");
+			longitudeMinutes.setStyle("-fx-border-color: red");
 			return;
 		} else if (Integer.parseInt(longitudeMinutes.getText()) > 60) {
 			errorLabel.setVisible(true);
