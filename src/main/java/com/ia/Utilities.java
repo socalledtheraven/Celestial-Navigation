@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Utilities {
-    private static final Logger logger = LogManager.getLogger();
+//    private static final Logger logger = LogManager.getLogger();
 
     public static double cos(double deg) {
         // all of my code assumes degrees, so this converts to radians first
@@ -21,7 +21,7 @@ public class Utilities {
         // from the other 2 above)
         // also, avoids errors by correcting for massive numbers with this mod
         if (deg > 1) {
-            logger.info("degree is way over normal range: " + deg);
+//            logger.info("degree is way over normal range: " + deg);
             deg %= Math.PI;
         }
         return Math.toDegrees(Math.asin(deg));

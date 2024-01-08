@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MainScreenController {
@@ -37,7 +38,7 @@ public class MainScreenController {
 	@FXML
 	public void addStar() throws IOException {
 		// opens a new window, passing in this controller so the star screen can add the information back here
-		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("starSelectScreen.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/starSelectScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		StarAddController controller = (StarAddController) fxmlLoader.getController();
 		controller.loadStars();
@@ -48,14 +49,14 @@ public class MainScreenController {
 		stage.setTitle("Star Input");
 		stage.setWidth(530);
 		stage.setHeight(430);
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 		stage.show();
 	}
 
 	public void addDeterminedPosition() throws IOException {
 		// opens a new window, passing in this controller so the determined position/eye height input screen can add
 		// the data back here
-		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("determinedPositionInputScreen.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/determinedPositionInputScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		DPosController controller = (DPosController) fxmlLoader.getController();
 		controller.loadHemispheres();
@@ -66,7 +67,7 @@ public class MainScreenController {
 		stage.setTitle("Determined Position Input");
 		stage.setWidth(530);
 		stage.setHeight(430);
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 		stage.show();
 
 	}
@@ -74,7 +75,7 @@ public class MainScreenController {
 	public void switchToFinalDisplay(int numStars, ArrayList<String> stars, AValue[] aValues, Degree[] azimuths,
 	                                 Latitude[] assumedLatitudes, Longitude[] assumedLongitudes, Latitude DRLatitude) throws IOException {
 		// switches fully to the new screen, deleting this window after it's rendered
-		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/finalFixDisplayScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
 
@@ -83,7 +84,7 @@ public class MainScreenController {
 		stage.setTitle("Star Data Display");
 		stage.setWidth(550);
 		stage.setHeight(450);
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 		stage.show();
 		pane.getScene().getWindow().hide();
 

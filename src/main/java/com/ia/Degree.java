@@ -28,7 +28,7 @@ public class Degree {
         }
 
         String[] parts = strDegrees.split(" ");
-        // handles the 3 different ways we can be recieving string input
+        // handles the 3 different ways we can be receiving string input
         if (parts.length == 2) {
             // almanac
             this.degrees = Integer.parseInt(parts[0].replace("°", "").replace("◦", "").replace("Ã", "").replace("Â", ""));

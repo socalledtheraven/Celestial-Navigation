@@ -10,19 +10,20 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 		// main method
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("mainScreen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/mainScreen.fxml"));
         Parent root = fxmlLoader.load();
 
 	    stage.setScene(new Scene(root));
         stage.setTitle("IA");
         stage.setWidth(550);
         stage.setHeight(470);
-        stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+        stage.getIcons().add(new Image("file:javafx/images/icon.png"));
         stage.show();
     }
 

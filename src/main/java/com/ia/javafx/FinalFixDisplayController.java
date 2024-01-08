@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class FinalFixDisplayController {
 	private Latitude[] alat;
 	private Longitude[] alon;
 	private Latitude drlat;
-	private final String tempPath = "src/main/resources/com/ia/temp/";
+	private final String tempPath = "temp/";
 
 
 	public void loadFixes() {
@@ -251,7 +252,7 @@ public class FinalFixDisplayController {
 	}
 
 	public void switchToPlotScreen() throws IOException, InterruptedException {
-		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("plotScreen.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/plotScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		PolarController controller = (PolarController) fxmlLoader.getController();
 		int numStars = s.size();
@@ -270,7 +271,7 @@ public class FinalFixDisplayController {
 		stage.setTitle("Star Data Display");
 		stage.setWidth(655);
 		stage.setHeight(500);
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 		stage.show();
 		pane.getScene().getWindow().hide();
 	}

@@ -8,7 +8,7 @@ public class AssumedPosition {
     private final Longitude assumedLongitude;
     private final double expectedHeight;
     private final Degree azimuth;
-    private static final Logger logger = LogManager.getLogger();
+//    private static final Logger logger = LogManager.getLogger();
 
     public AssumedPosition(DRPosition dPos, Star star) {
         // assumed latitude is just the degrees of dr position

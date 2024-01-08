@@ -23,12 +23,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static java.lang.Math.sqrt;
 
 public class PolarController {
-	private static final Logger logger = LogManager.getLogger();
+//	private static final Logger logger = LogManager.getLogger();
 	@FXML
 	private Pane pane;
 	@FXML
@@ -74,7 +75,7 @@ public class PolarController {
 			// displays the data instead of plotting it right away - this is mostly because of the temp files, which will
 			// break if not properly called through addStarDisplay, so the user will get an error when clicking on the
 			// back button
-			FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/finalFixDisplayScreen.fxml"));
 			Parent root = fxmlLoader.load();
 			FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
 
@@ -83,7 +84,7 @@ public class PolarController {
 			stage.setTitle("Star Data Display");
 			stage.setWidth(550);
 			stage.setHeight(450);
-			stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+			stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 			stage.show();
 			pane.getScene().getWindow().hide();
 
@@ -98,7 +99,7 @@ public class PolarController {
 	}
 
 	public void saveFixes() {
-		String tempPath = "src/main/resources/com/ia/temp/";
+		String tempPath = "temp/";
 		File recentFile = FileHandler.getLatestFilefromDir(tempPath);
 
 		FileChooser fileChooser = new FileChooser();
@@ -154,7 +155,7 @@ public class PolarController {
 		// finds the amount of the hypotenuse that the distance takes up and therefore how much the other sides need
 		// to shift by
 		double ratio = distance / sqrt(xDistance*xDistance + yDistance*yDistance);
-		logger.info("Proportion of distance vs azimuth line past the azimuth point: " + ratio);
+//		logger.info("Proportion of distance vs azimuth line past the azimuth point: " + ratio);
 
 		return new Point(start.getX() + (xDistance * ratio), start.getY() + (yDistance * ratio));
 	}
@@ -233,7 +234,7 @@ public class PolarController {
 		// as mentioned inside, we only use 2 lines
 		Point intersectionPoint = MathematicalLine.getIntercept(new MathematicalLine(linesOfPosition[0]),
 				new MathematicalLine(linesOfPosition[1]));
-		logger.info("Intersection point is " + intersectionPoint);
+//		logger.info("Intersection point is " + intersectionPoint);
 
 		double finalLon;
 		if (intersectionPoint.getX() > midLonLabel.getLayoutX()) {
@@ -250,12 +251,12 @@ public class PolarController {
 				"°",
 				ButtonType.OK);
 		Stage stage = (Stage) a.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 		a.show();
 	}
 
 	public void displayValues() throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("finalFixDisplayScreen.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(new URL("file:javafx/finalFixDisplayScreen.fxml"));
 		Parent root = fxmlLoader.load();
 		FinalFixDisplayController controller = (FinalFixDisplayController) fxmlLoader.getController();
 
@@ -264,7 +265,7 @@ public class PolarController {
 		stage.setTitle("Star Data Display");
 		stage.setWidth(550);
 		stage.setHeight(450);
-		stage.getIcons().add(new Image("file:src/main/resources/com/ia/javafx/images/icon.png"));
+		stage.getIcons().add(new Image("file:javafx/images/icon.png"));
 		stage.show();
 		pane.getScene().getWindow().hide();
 

@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 public class FileHandler {
     private static final LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
-    private static final Logger logger = LogManager.getLogger();
+//    private static final Logger logger = LogManager.getLogger();
 
     public static void savePlot(Plot[] p, String path) {
         // saves a plot to a file using a special notation
@@ -36,7 +36,7 @@ public class FileHandler {
             appendToFile(path, l);
         }
 
-        logger.info("Saved plot to " + path);
+//        logger.info("Saved plot to " + path);
     }
 
     public static ArrayList<Plot> loadPlot(String path) {
@@ -69,7 +69,7 @@ public class FileHandler {
             plots.add(new Plot(star, aLat, aLon, aVal, azimuth));
         }
 
-        logger.info("Loaded plot from " + path);
+//        logger.info("Loaded plot from " + path);
         return plots;
     }
 
@@ -87,7 +87,7 @@ public class FileHandler {
             }
             return lines;
         } catch (IOException e) {
-            logger.error(e.getMessage());
+//            logger.error(e.getMessage());
         }
         return null;
     }
@@ -97,7 +97,7 @@ public class FileHandler {
         try (FileWriter fw = new FileWriter(path)) {
             fw.write("");
         } catch (IOException e) {
-            logger.error("Error in clearFile: " + e.getMessage());
+//            logger.error("Error in clearFile: " + e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class FileHandler {
             pr.println(text);
         }
         catch (IOException e) {
-            logger.error("Error in wholeFileRead: " + e.getMessage());
+//            logger.error("Error in wholeFileRead: " + e.getMessage());
         }
     }
 
@@ -134,13 +134,13 @@ public class FileHandler {
     private static String almanacPageText(int page) {
         // uses pdfbox to scrape text from the almanac pdfs. much less hassle than reading them myself
         // using a relative file path is bad form, but I couldn't get the filepath thing to work
-        try (PDDocument document = PDDocument.load(new File("src/main/resources/com/ia/data/almanac.pdf"))) {
+        try (PDDocument document = PDDocument.load(new File("data/almanac.pdf"))) {
             PDFTextStripper stripper = new PDFTextStripper();
             stripper.setStartPage(page);
             stripper.setEndPage(page);
             return stripper.getText(document);
         } catch (Exception e) {
-            logger.error("Error in almanacPageText: " + e.getMessage());
+//            logger.error("Error in almanacPageText: " + e.getMessage());
         }
         return null;
     }
@@ -168,7 +168,7 @@ public class FileHandler {
             }
             return new String[][]{parts, stars};
         } catch (Exception e) {
-            logger.error("Error in starDetails: " + e.getMessage());
+//            logger.error("Error in starDetails: " + e.getMessage());
         }
         return null;
     }
@@ -218,7 +218,7 @@ public class FileHandler {
                 counter++;
             }
         } catch (Exception e) {
-            logger.error("Error in the second page of altitude correction: " + e.getMessage());
+//            logger.error("Error in the second page of altitude correction: " + e.getMessage());
         }
 
         pageText = pageTexts[1];
@@ -261,7 +261,7 @@ public class FileHandler {
                 counter++;
             }
         } catch (Exception e) {
-            logger.error("Error in the first page of altitude correction: " + e.getMessage());
+//            logger.error("Error in the first page of altitude correction: " + e.getMessage());
         }
 
         return new Double[][]{apparentAltitudes, corrections};
@@ -281,7 +281,7 @@ public class FileHandler {
                 return new Degree(0, corrections[i-1]);
             }
         }
-        logger.warn("No correction found for " + apparentAltitude);
+//        logger.warn("No correction found for " + apparentAltitude);
         return null;
     }
 
@@ -311,31 +311,29 @@ public class FileHandler {
     }
 
     public static Degree getAriesGHA() {
-        return new Degree(4.216);
+        String pageText = almanacPageText(dateToPageNum());
+        // there's a weekday on the page which I'm using to identify the correct table
+        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
+        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
+        String[] lines = extractedText.split("\\n");
 
-//        String pageText = almanacPageText(dateToPageNum());
-//        // there's a weekday on the page which I'm using to identify the correct table
-//        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
-//        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
-//        String[] lines = extractedText.split("\\n");
-//
-//        Degree[] hourlyDetails = new Degree[lines.length];
-//        for (int i = 0; i < lines.length; i++) {
-//            String line = lines[i];
-//            if (i != 0) {
-//                Degree GHA = new Degree(line.split(" ")[1]);
-//                hourlyDetails[i] = GHA;
-//            }
-//        }
-//
-//        // adding the degrees and minutes with correction
-//        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
-//
-//        if (aries.toDouble() > 360) {
-//            aries = Degree.subtract(aries, new Degree(360));
-//        }
-//
-//        return aries;
+        Degree[] hourlyDetails = new Degree[lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (i != 0) {
+                Degree GHA = new Degree(line.split(" ")[1]);
+                hourlyDetails[i] = GHA;
+            }
+        }
+
+        // adding the degrees and minutes with correction
+        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
+
+        if (aries.toDouble() > 360) {
+            aries = Degree.subtract(aries, new Degree(360));
+        }
+
+        return aries;
     }
 
     public static int dateToPageNum() {
