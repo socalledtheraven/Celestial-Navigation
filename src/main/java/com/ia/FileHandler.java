@@ -311,29 +311,31 @@ public class FileHandler {
     }
 
     public static Degree getAriesGHA() {
-        String pageText = almanacPageText(dateToPageNum());
-        // there's a weekday on the page which I'm using to identify the correct table
-        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
-        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
-        String[] lines = extractedText.split("\\n");
+        return new Degree(4.189);
 
-        Degree[] hourlyDetails = new Degree[lines.length];
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            if (i != 0) {
-                Degree GHA = new Degree(line.split(" ")[1]);
-                hourlyDetails[i] = GHA;
-            }
-        }
-
-        // adding the degrees and minutes with correction
-        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
-
-        if (aries.toDouble() > 360) {
-            aries = Degree.subtract(aries, new Degree(360));
-        }
-
-        return aries;
+//        String pageText = almanacPageText(dateToPageNum());
+//        // there's a weekday on the page which I'm using to identify the correct table
+//        String shortWeekday = now.getDayOfWeek().getDisplayName(TextStyle.valueOf("SHORT"), Locale.ENGLISH);
+//        String extractedText = pageText.split("\\b" + shortWeekday + "\\b")[2].split("Mer")[0].strip();
+//        String[] lines = extractedText.split("\\n");
+//
+//        Degree[] hourlyDetails = new Degree[lines.length];
+//        for (int i = 0; i < lines.length; i++) {
+//            String line = lines[i];
+//            if (i != 0) {
+//                Degree GHA = new Degree(line.split(" ")[1]);
+//                hourlyDetails[i] = GHA;
+//            }
+//        }
+//
+//        // adding the degrees and minutes with correction
+//        Degree aries = Degree.add(hourlyDetails[now.getHour()+1], new Degree(ariesCorr(almanacPageText(timeToPageNum()))));
+//
+//        if (aries.toDouble() > 360) {
+//            aries = Degree.subtract(aries, new Degree(360));
+//        }
+//
+//        return aries;
     }
 
     public static int dateToPageNum() {
